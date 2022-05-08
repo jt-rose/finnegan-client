@@ -19,7 +19,7 @@ export const useCreateTransactionMutation = () => {
 };
 
 export const createTransaction = (transaction: Transaction) =>
-  axios.post(TRANSACTION_ROUTE, transaction);
+  post(TRANSACTION_ROUTE, transaction);
 
 // useEditTransactionMutation
 

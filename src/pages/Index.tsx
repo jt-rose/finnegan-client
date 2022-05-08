@@ -4,6 +4,7 @@ import { post } from "../queries/fetchers";
 import { useGetRecurringTransactionsQuery } from "../queries/recurringTransactionController";
 import { TRANSACTION_ROUTE } from "../queries/routes";
 import {
+  createTransaction,
   useCreateTransactionMutation,
   useGetTransactionsQuery,
 } from "../queries/transactionController";
@@ -35,12 +36,28 @@ const Index = () => {
   //     { onSuccess: (data) => console.log(data) }
   //   );
 
-  const ct = useCreateTransactionMutation();
+  //const ct = useCreateTransactionMutation();
+  const createTransaction = () =>
+    new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
   return (
-    <p onClick={() => ct.mutate(new Transaction(5000, "SHOPPING"))}>
-      Index page
-    </p>
+    <>
+      <p onClick={createTransaction}>Index page</p>
+      <ul>
+        {res.data &&
+          res.data.map((x) => (
+            <li>
+              {x.amount}
+              {"  "}
+              <span onClick={() => Transaction.edit({ ...x, amount: 1 })}>
+                Update
+              </span>
+              {"  "}
+              <span onClick={() => Transaction.remove(x)}>X</span>
+            </li>
+          ))}
+      </ul>
+    </>
   );
 };
 
