@@ -12,7 +12,7 @@ export class Transaction {
   category: string;
   date: Date;
   note?: string;
-  private static URL = BASE_ROUTE + "/transactions";
+  public static URL = BASE_ROUTE + "/transactions";
 
   save() {
     return post(Transaction.URL, {
