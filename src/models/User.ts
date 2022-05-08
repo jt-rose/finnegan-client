@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useQuery } from "react-query";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
@@ -26,11 +27,13 @@ export class User {
 
   // auth methods
   public static login(username: string, password: string) {
-    post(BASE_ROUTE + "/login", { username, password }).then((res) => {
-      const token = res.headers.authorization;
-      sessionStorage.setItem("token", token);
-      // connect to fetch user with error handling
-    });
+    return axios
+      .post(BASE_ROUTE + "/login", { username, password })
+      .then((res) => {
+        const token = res.headers.authorization;
+        sessionStorage.setItem("token", token);
+        // connect to fetch user with error handling
+      });
   }
 
   public static logout() {
