@@ -52,7 +52,7 @@ export class User {
     });
   }
 
-  public static get fetch() {
+  public static get useFetch() {
     return () => useQuery<IUser, Error>("user", () => get(User.URL));
   }
 

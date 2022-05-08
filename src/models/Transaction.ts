@@ -23,7 +23,7 @@ export class Transaction {
     });
   }
 
-  public static get fetch() {
+  public static get useFetch() {
     return () =>
       useQuery<ITransaction[], Error>("transactions", () =>
         get(Transaction.URL)

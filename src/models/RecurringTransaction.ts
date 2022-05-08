@@ -4,7 +4,7 @@ import { get, post, put, remove } from "../queries/fetchers";
 import { Transaction } from "./Transaction";
 import { User } from "./User";
 
-class RecurringTransaction extends Transaction {
+export class RecurringTransaction extends Transaction {
   startDate: Date;
   endDate: Date | null;
   cycle: string;
@@ -20,7 +20,7 @@ class RecurringTransaction extends Transaction {
     });
   }
 
-  public static get fetch() {
+  public static get useFetch() {
     return () =>
       useQuery<IRecurringTransaction[], Error>("recurring", () =>
         get(RecurringTransaction.URL)
