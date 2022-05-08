@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
+import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
-import { TRANSACTION_ROUTE } from "../queries/routes";
 import { User } from "./User";
 
 // The Transaction class is used to construct a Transaction entity
@@ -12,9 +12,10 @@ export class Transaction {
   category: string;
   date: Date;
   note?: string;
+  private static URL = BASE_ROUTE + "/transactions";
 
   save() {
-    return post(TRANSACTION_ROUTE, {
+    return post(Transaction.URL, {
       amount: this.amount,
       catgeory: this.category,
       date: this.date,
@@ -25,16 +26,16 @@ export class Transaction {
   public static get fetch() {
     return () =>
       useQuery<ITransaction[], Error>("transactions", () =>
-        get(TRANSACTION_ROUTE)
+        get(Transaction.URL)
       );
   }
 
   public static edit(transaction: ITransaction) {
-    return put(TRANSACTION_ROUTE + "/" + transaction.id, transaction);
+    return put(Transaction.URL + "/" + transaction.id, transaction);
   }
 
   public static remove(transaction: ITransaction) {
-    return remove(TRANSACTION_ROUTE + "/" + transaction.id);
+    return remove(Transaction.URL + "/" + transaction.id);
   }
 
   constructor(amount: number, category: string, note?: string) {
