@@ -2,12 +2,6 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { post } from "../queries/fetchers";
 import { useGetRecurringTransactionsQuery } from "../queries/recurringTransactionController";
-import { TRANSACTION_ROUTE } from "../queries/routes";
-import {
-  createTransaction,
-  useCreateTransactionMutation,
-  useGetTransactionsQuery,
-} from "../queries/transactionController";
 import { useGetUserQuery } from "../queries/userController";
 import { ITransaction, Transaction } from "../types/Transaction";
 
