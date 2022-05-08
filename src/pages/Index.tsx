@@ -9,7 +9,7 @@ const Index = () => {
   console.log("data: ", data);
   console.log("error: ", error);
 
-  const res = Transaction.useFetch(); //useGetTransactionsQuery();
+  const res = Transaction.useFetch();
   console.log("transaction: ", res.isLoading);
   console.log("transaction data: ", res.data);
   console.log("transaction error: ", res.error);
@@ -19,15 +19,6 @@ const Index = () => {
   console.log("recurring data: ", res2.data);
   console.log("recurring error: ", res2.error);
 
-  //   const createTransaction = useMutation(
-  //     (payload: { transaction: Transaction; token: string }) =>
-  //       axios.post(TRANSACTION_ROUTE, payload.transaction, {
-  //         headers: { Authorization: "Bearer " + payload.token },
-  //       }),
-  //     { onSuccess: (data) => console.log(data) }
-  //   );
-
-  //const ct = useCreateTransactionMutation();
   const createTransaction = () =>
     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
