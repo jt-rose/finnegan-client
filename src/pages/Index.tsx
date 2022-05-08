@@ -18,7 +18,7 @@ const Index = () => {
   console.log("data: ", data);
   console.log("error: ", error);
 
-  const res = useGetTransactionsQuery();
+  const res = Transaction.fetch(); //useGetTransactionsQuery();
   console.log("transaction: ", res.isLoading);
   console.log("transaction data: ", res.data);
   console.log("transaction error: ", res.error);

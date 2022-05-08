@@ -1,4 +1,5 @@
-import { post, put, remove } from "../queries/fetchers";
+import { useQuery } from "react-query";
+import { get, post, put, remove } from "../queries/fetchers";
 import { TRANSACTION_ROUTE } from "../queries/routes";
 import { User } from "./User";
 
@@ -19,6 +20,13 @@ export class Transaction {
       date: this.date,
       note: this.note,
     });
+  }
+
+  public static get fetch() {
+    return () =>
+      useQuery<ITransaction[], Error>("transactions", () =>
+        get(TRANSACTION_ROUTE)
+      );
   }
 
   public static edit(transaction: ITransaction) {
