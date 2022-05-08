@@ -9,8 +9,8 @@ const SET_USER_GOAL_ROUTE = USER_ROUTE + "/setgoal";
 
 export const LOGIN_ROUTE = BASE_ROUTE + "/login";
 
-export const useGetUserQuery = (credentials: string) => {
-  return useQuery<User, Error>("user", () => get(USER_ROUTE, credentials));
+export const useGetUserQuery = () => {
+  return useQuery<User, Error>("user", () => get(USER_ROUTE));
 };
 
 // useCreateUserMutation
@@ -24,6 +24,6 @@ export const useGetUserQuery = (credentials: string) => {
 // useLoginMutation
 export const useLoginMutation = (username: string, password: string) => {
   return useMutation<string, Error>("login", () =>
-    post(LOGIN_ROUTE, { username, password }, "")
+    post(LOGIN_ROUTE, { username, password })
   );
 };

@@ -3,9 +3,9 @@ import { useQuery } from "react-query";
 import { RECURRING_TRANSACTIONS_ROUTE } from "./routes";
 import { RecurringTransaction } from "../types/Recurring";
 
-export const useGetRecurringTransactionsQuery = (credentials: string) => {
+export const useGetRecurringTransactionsQuery = () => {
   return useQuery<RecurringTransaction, Error>("recurring", () =>
-    get(RECURRING_TRANSACTIONS_ROUTE, credentials)
+    get(RECURRING_TRANSACTIONS_ROUTE)
   );
 };
 

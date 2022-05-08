@@ -4,8 +4,8 @@ import { useQuery } from "react-query";
 import { get } from "../queries/fetchers";
 import { User } from "../types/User";
 
-export const useGetUserQuery = (credentials: string) =>
-  useQuery<User, Error>("user", () => get(USER_ROUTE, credentials));
+export const useGetUserQuery = () =>
+  useQuery<User, Error>("user", () => get(USER_ROUTE));
 
 // add prod endpoint later
 const BASE_ROUTE = "http://localhost:8080";
