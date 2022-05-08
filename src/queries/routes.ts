@@ -2,7 +2,7 @@
 
 import { useQuery } from "react-query";
 import { get } from "../queries/fetchers";
-import { User } from "../types/User";
+import { User } from "../models/User";
 
 export const useGetUserQuery = () =>
   useQuery<User, Error>("user", () => get(USER_ROUTE));

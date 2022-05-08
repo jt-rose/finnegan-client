@@ -1,5 +1,5 @@
 import { get, post } from "../queries/fetchers";
-import { User } from "../types/User";
+import { User } from "../models/User";
 import { useQuery, useMutation } from "react-query";
 import { BASE_ROUTE } from "./baseRoute";
 

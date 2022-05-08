@@ -3,7 +3,7 @@ import { useMutation } from "react-query";
 import { post } from "../queries/fetchers";
 import { useGetRecurringTransactionsQuery } from "../queries/recurringTransactionController";
 import { useGetUserQuery } from "../queries/userController";
-import { ITransaction, Transaction } from "../types/Transaction";
+import { ITransaction, Transaction } from "../models/Transaction";
 
 const Index = () => {
   const { isLoading, error, data } = useGetUserQuery();

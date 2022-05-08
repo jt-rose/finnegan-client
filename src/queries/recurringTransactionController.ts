@@ -1,7 +1,7 @@
 import { get } from "../queries/fetchers";
 import { useQuery } from "react-query";
 import { RECURRING_TRANSACTIONS_ROUTE } from "./routes";
-import { IRecurringTransaction } from "../types/Recurring";
+import { IRecurringTransaction } from "../models/Recurring";
 
 export const useGetRecurringTransactionsQuery = () => {
   return useQuery<IRecurringTransaction, Error>("recurring", () =>
