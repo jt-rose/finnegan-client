@@ -10,21 +10,17 @@ const Index = () => {
   console.log("error: ", error);
 
   const res = Transaction.useFetch();
-  console.log("transaction: ", res.isLoading);
   console.log("transaction data: ", res.data);
-  console.log("transaction error: ", res.error);
 
   const res2 = RecurringTransaction.useFetch();
-  console.log("recurring: ", res2.isLoading);
   console.log("recurring data: ", res2.data);
-  console.log("recurring error: ", res2.error);
 
-  const createTransaction = () =>
-    new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
+  //   const createTransaction = () =>
+  //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
   return (
     <>
-      <p onClick={createTransaction}>Index page</p>
+      <p onClick={() => User.setGoal(50000, new Date())}>Index page</p>
       <ul>
         {res.data &&
           res.data.map((x) => (

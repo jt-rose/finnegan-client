@@ -56,6 +56,13 @@ export class User {
     return () => useQuery<IUser, Error>("user", () => get(User.URL));
   }
 
+  public static setGoal(goal: number, date: Date) {
+    return put(
+      User.URL + `/setgoal?goal=${goal}&date=${date.toISOString()}`,
+      {}
+    );
+  }
+
   public static edit(user: IUser) {
     return put(User.URL + "/" + user.id, user);
   }
