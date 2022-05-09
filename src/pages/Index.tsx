@@ -18,6 +18,8 @@ const Index = () => {
   //   const createTransaction = () =>
   //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
+  //Transaction.getTransactionSum().then((data) => console.log(data));
+
   return (
     <>
       <p onClick={() => User.setGoal(50000, new Date())}>Index page</p>

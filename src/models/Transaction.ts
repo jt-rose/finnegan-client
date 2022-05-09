@@ -30,6 +30,10 @@ export class Transaction {
       );
   }
 
+  public static getTransactionSum() {
+    return get(Transaction.URL + "/sum");
+  }
+
   public static edit(transaction: ITransaction) {
     return put(Transaction.URL + "/" + transaction.id, transaction);
   }
