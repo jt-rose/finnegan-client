@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
 import { User } from "./User";
@@ -27,6 +27,22 @@ export class Transaction {
     return () =>
       useQuery<ITransaction[], Error>("transactions", () =>
         get(Transaction.URL)
+      );
+  }
+
+  public static get usePaginatedFetch() {
+    return () =>
+      useInfiniteQuery<any, Error>(
+        "paginatedTransactions",
+        ({ pageParam = 0 }) =>
+          get(Transaction.URL + `/paginated?page=${pageParam}&size=3`),
+        {
+          //keepPreviousData: true,
+          getNextPageParam: (lastPage) => {
+            console.log("lastPage: ", lastPage);
+            return lastPage.pageable.pageNumber + 1;
+          },
+        }
       );
   }
 
