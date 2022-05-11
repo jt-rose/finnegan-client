@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "react-query";
+import { CATEGORY } from "../enums/CATEGORY";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
 import { User } from "./User";
@@ -9,7 +10,7 @@ import { User } from "./User";
 // a transaction id and associated owner
 export class Transaction {
   amount: number;
-  category: string;
+  category: CATEGORY;
   date: Date;
   note?: string;
   public static URL = BASE_ROUTE + "/transactions";
@@ -64,7 +65,7 @@ export class Transaction {
     return remove(Transaction.URL + "/" + transaction.id);
   }
 
-  constructor(amount: number, category: string, note?: string) {
+  constructor(amount: number, category: CATEGORY, note?: string) {
     this.amount = amount;
     this.category = category;
     this.date = new Date();

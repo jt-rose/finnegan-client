@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { CATEGORY } from "../enums/CATEGORY";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
 import { Transaction } from "./Transaction";
@@ -27,6 +28,18 @@ export class RecurringTransaction extends Transaction {
       );
   }
 
+  private static calculateRecurringTransaction(
+    recurringTransaction: IRecurringTransaction
+  ) {}
+
+  public static calculateRecurringTransactions(
+    recurringTransactions: IRecurringTransaction[]
+  ) {
+    return recurringTransactions.map((rt) =>
+      this.calculateRecurringTransaction(rt)
+    );
+  }
+
   public static edit(recurringTransaction: IRecurringTransaction) {
     return put(
       RecurringTransaction.URL + "/" + recurringTransaction.id,
@@ -40,7 +53,7 @@ export class RecurringTransaction extends Transaction {
 
   constructor(
     amount: number,
-    category: string,
+    category: CATEGORY,
     cycle: string,
     startDate: Date,
     endDate: Date | null,
