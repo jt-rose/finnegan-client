@@ -49,8 +49,11 @@ export class Transaction {
       );
   }
 
-  public static getTransactionSum() {
-    return get(Transaction.URL + "/sum");
+  public static get useTransactionSumFetch() {
+    return () =>
+      useQuery<number, Error>("transactionSum", () =>
+        get(Transaction.URL + "/sum")
+      );
   }
 
   public static edit(transaction: ITransaction) {

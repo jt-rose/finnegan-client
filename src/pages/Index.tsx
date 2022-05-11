@@ -14,8 +14,11 @@ const Index = () => {
 
   //Transaction.getTransactionSum().then((data) => console.log(data));
 
+  const sumFetch = Transaction.useTransactionSumFetch();
+  console.log(sumFetch);
   return (
     <>
+      <p>SUM: {sumFetch.data}</p>
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
