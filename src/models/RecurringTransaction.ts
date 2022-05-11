@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { CATEGORY } from "../enums/CATEGORY";
+import { CYCLE } from "../enums/CYCLE";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
 import { Transaction } from "./Transaction";
@@ -8,7 +9,7 @@ import { User } from "./User";
 export class RecurringTransaction extends Transaction {
   startDate: Date;
   endDate: Date | null;
-  cycle: string;
+  cycle: CYCLE;
 
   public static URL = BASE_ROUTE + "/recurring";
 
@@ -54,7 +55,7 @@ export class RecurringTransaction extends Transaction {
   constructor(
     amount: number,
     category: CATEGORY,
-    cycle: string,
+    cycle: CYCLE,
     startDate: Date,
     endDate: Date | null,
     note?: string
