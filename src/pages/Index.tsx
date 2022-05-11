@@ -3,21 +3,11 @@ import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
 
 const Index = () => {
-  const { isLoading, error, data } = User.useFetch();
+  //const userFetch = User.useFetch();
+  const transactionFetch = Transaction.usePaginatedFetch();
 
-  console.log(isLoading);
-  console.log("data: ", data);
-  console.log("error: ", error);
-  const res = Transaction.usePaginatedFetch();
-
-  const { fetchNextPage } = res;
-  console.log("pagget2", Object.keys(res));
-  console.log("transaction data: ", res);
-  console.log("pages: ", res.data);
-  console.log("fnp", fetchNextPage);
-
-  const res2 = RecurringTransaction.useFetch();
-  console.log("recurring data: ", res2.data);
+  const recurringFetch = RecurringTransaction.useFetch();
+  console.log("recurring data: ", recurringFetch.data);
 
   //   const createTransaction = () =>
   //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
@@ -26,11 +16,13 @@ const Index = () => {
 
   return (
     <>
-      <button onClick={() => res.fetchNextPage()}>load more</button>
+      <button onClick={() => transactionFetch.fetchNextPage()}>
+        load more
+      </button>
       <p onClick={() => User.setGoal(50000, new Date())}>Index page</p>
       <ul>
-        {res.data &&
-          res.data.pages.map((page) =>
+        {transactionFetch.data &&
+          transactionFetch.data.pages.map((page) =>
             page.content.map((pc) => <li>${pc.amount} </li>)
           )}
         {/* {res.data &&
