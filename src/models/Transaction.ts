@@ -32,7 +32,10 @@ export class Transaction {
 
   public static get usePaginatedFetch() {
     return () =>
-      useInfiniteQuery<any, Error>(
+      useInfiniteQuery<
+        { content: ITransaction[]; pageable: { pageNumber: number } },
+        Error
+      >(
         "paginatedTransactions",
         ({ pageParam = 0 }) =>
           get(Transaction.URL + `/paginated?page=${pageParam}&size=3`),
