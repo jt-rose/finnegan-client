@@ -1,33 +1,15 @@
-import { ITransaction, Transaction } from "../models/Transaction";
+import { Transaction } from "../models/Transaction";
 import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
-import { useState } from "react";
-import { useInfiniteQuery } from "react-query";
-import { get } from "../queries/fetchers";
 
 const Index = () => {
   const { isLoading, error, data } = User.useFetch();
-  const [page, setPage] = useState(0);
 
   console.log(isLoading);
   console.log("data: ", data);
   console.log("error: ", error);
   const res = Transaction.usePaginatedFetch();
-  //   const res = useInfiniteQuery<any, Error>(
-  //     "paginatedTransactions",
-  //     ({ pageParam = 0 }) =>
-  //       get(
-  //         "http://localhost:8080/transactions" +
-  //           `/paginated?page=${pageParam}&size=3`
-  //       ),
-  //     {
-  //       //keepPreviousData: true,
-  //       getNextPageParam: (lastPage) => {
-  //         console.log("lastPage: ", lastPage);
-  //         return lastPage.pageable.pageNumber + 1;
-  //       },
-  //     }
-  //   );
+
   const { fetchNextPage } = res;
   console.log("pagget2", Object.keys(res));
   console.log("transaction data: ", res);
