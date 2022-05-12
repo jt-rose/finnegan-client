@@ -1,7 +1,6 @@
 import { Transaction } from "../models/Transaction";
 import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
-import { TransactionCard } from "../components/TransactionCard";
 import SimpleAccordion from "../components/TransactionAccordion";
 import TransactionTables from "../components/TransactionTable";
 
@@ -37,31 +36,7 @@ const Index = () => {
             : []
         }
       />
-      <p onClick={() => User.setGoal(50000, new Date())}>Index page</p>
-      <ul>
-        {transactionFetch.data &&
-          transactionFetch.data.pages.map((page) =>
-            page.content.map((pc) => (
-              <li>
-                <TransactionCard transaction={pc} />{" "}
-              </li>
-            ))
-          )}
-        {/* {res.data &&
-          res.data.pages.map((page) =>
-            (page.content as ITransaction[]).map((x) => (
-              <li>
-                {x.amount}
-                {"  "}
-                <span onClick={() => Transaction.edit({ ...x, amount: 1 })}>
-                  Update
-                </span>
-                {"  "}
-                <span onClick={() => Transaction.remove(x)}>X</span>
-              </li>
-            ))
-          )} */}
-      </ul>
+      <p onClick={() => User.setGoal(50000, new Date())}>Set Goal</p>
     </>
   );
 };
