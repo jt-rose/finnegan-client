@@ -2,6 +2,7 @@ import { Transaction } from "../models/Transaction";
 import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
 import { TransactionCard } from "../components/TransactionCard";
+import SimpleAccordion from "../components/TransactionAccordion";
 
 const Index = () => {
   //const userFetch = User.useFetch();
@@ -21,6 +22,13 @@ const Index = () => {
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
+      <SimpleAccordion
+        transactions={
+          transactionFetch.data
+            ? transactionFetch.data.pages.flatMap((p) => p.content)
+            : []
+        }
+      />
       <p onClick={() => User.setGoal(50000, new Date())}>Index page</p>
       <ul>
         {transactionFetch.data &&
