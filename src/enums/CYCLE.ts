@@ -1,6 +1,1 @@
-export enum CYCLE {
-  DAILY,
-  WEEKLY,
-  MONTHLY,
-  QUARTERLY,
-}
+export type CYCLE = "DAILY" | "WEEKLY" | "MONTHLY" | "QUARTERLY";
