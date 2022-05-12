@@ -3,6 +3,7 @@ import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
 import { TransactionCard } from "../components/TransactionCard";
 import SimpleAccordion from "../components/TransactionAccordion";
+import TransactionTables from "../components/TransactionTable";
 
 const Index = () => {
   //const userFetch = User.useFetch();
@@ -22,6 +23,13 @@ const Index = () => {
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
+      <TransactionTables
+        transactions={
+          transactionFetch.data
+            ? transactionFetch.data.pages.flatMap((p) => p.content)
+            : []
+        }
+      />
       <SimpleAccordion
         transactions={
           transactionFetch.data
