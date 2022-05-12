@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
 import HomeIcon from "@mui/icons-material/Home";
@@ -24,22 +25,58 @@ const CategoryIcons = {
 export const CategoryIcon = (props: { category: CATEGORY }) => {
   switch (props.category) {
     case "GROCERIES":
-      return <CategoryIcons.Groceries />;
+      return (
+        <Tooltip title="Groceries">
+          <CategoryIcons.Groceries />
+        </Tooltip>
+      );
     case "UTILITIES":
-      return <CategoryIcons.Utilities />;
+      return (
+        <Tooltip title="Utilities">
+          <CategoryIcons.Utilities />
+        </Tooltip>
+      );
     case "HOME":
-      return <CategoryIcons.Home />;
+      return (
+        <Tooltip title="Home">
+          <CategoryIcons.Home />
+        </Tooltip>
+      );
     case "SCHOOL":
-      return <CategoryIcons.School />;
+      return (
+        <Tooltip title="School">
+          <CategoryIcons.School />
+        </Tooltip>
+      );
     case "TRANSPORTATION":
-      return <CategoryIcons.Transportation />;
+      return (
+        <Tooltip title="Transportation">
+          <CategoryIcons.Transportation />
+        </Tooltip>
+      );
     case "MEDICAL":
-      return <CategoryIcons.Medical />;
+      return (
+        <Tooltip title="Medical">
+          <CategoryIcons.Medical />
+        </Tooltip>
+      );
     case "ENTERTAINMENT":
-      return <CategoryIcons.Entertainment />;
+      return (
+        <Tooltip title="Entertainment">
+          <CategoryIcons.Entertainment />
+        </Tooltip>
+      );
     case "SHOPPING":
-      return <CategoryIcons.Shopping />;
+      return (
+        <Tooltip title="Shopping">
+          <CategoryIcons.Shopping />
+        </Tooltip>
+      );
     default:
-      return <CategoryIcons.Other />;
+      return (
+        <Tooltip title="Other">
+          <CategoryIcons.Other />
+        </Tooltip>
+      );
   }
 };
