@@ -8,6 +8,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ITransaction } from "../models/Transaction";
 import { CategoryIcon } from "./CategoryIcons";
+import { Typography } from "@mui/material";
+
+const TransactionDate = (props: { date: Date }) => {
+  const date = new Date(props.date);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return (
+    <Typography variant="h5">
+      {month} / {day} / {year}
+    </Typography>
+  );
+};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,13 +59,15 @@ export default function TransactionTables(props: {
           {props.transactions.map((transaction) => (
             <StyledTableRow key={transaction.id}>
               <StyledTableCell component="th" scope="row">
-                {transaction.amount}
+                <Typography variant="h5">{transaction.amount}</Typography>
               </StyledTableCell>
               <StyledTableCell align="right">
                 {/*transaction.category*/}
                 <CategoryIcon category={transaction.category} />
               </StyledTableCell>
-              <StyledTableCell align="right">{`${transaction.date}`}</StyledTableCell>
+              <StyledTableCell align="right">
+                <TransactionDate date={transaction.date} />
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
