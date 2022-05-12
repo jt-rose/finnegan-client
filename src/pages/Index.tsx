@@ -1,6 +1,7 @@
 import { Transaction } from "../models/Transaction";
 import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
+import { TransactionCard } from "../components/TransactionCard";
 
 const Index = () => {
   //const userFetch = User.useFetch();
@@ -24,7 +25,11 @@ const Index = () => {
       <ul>
         {transactionFetch.data &&
           transactionFetch.data.pages.map((page) =>
-            page.content.map((pc) => <li>${pc.amount} </li>)
+            page.content.map((pc) => (
+              <li>
+                <TransactionCard transaction={pc} />{" "}
+              </li>
+            ))
           )}
         {/* {res.data &&
           res.data.pages.map((page) =>
