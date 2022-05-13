@@ -11,20 +11,28 @@ const Index = () => {
   const recurringFetch = RecurringTransaction.useFetch();
   console.log("recurring data: ", recurringFetch.data);
 
-  const rt = recurringFetch.data
+  const calculatedRecurringTransactions = recurringFetch.data
     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
     : [];
-  const rtSum = rt.reduce((sum, recurring) => sum + recurring.totalAmount, 0);
-  console.log("recurring calc: ", rt);
+  const recurringTransactionsSum = calculatedRecurringTransactions.reduce(
+    (sum, recurring) => sum + recurring.totalAmount,
+    0
+  );
+  console.log("recurring calc: ", calculatedRecurringTransactions);
   //   const createTransaction = () =>
   //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
   const sumFetch = Transaction.useTransactionSumFetch();
   console.log("sumFetch: ", sumFetch);
-  console.log("rt-sum: ", rtSum);
+  console.log("rt-sum: ", recurringTransactionsSum);
+
+  const transactionSum =
+    sumFetch.data && recurringFetch.data
+      ? sumFetch.data + recurringTransactionsSum
+      : "...loading";
   return (
     <>
-      <p>SUM: {sumFetch.data && sumFetch.data + rtSum}</p>
+      <p>SUM: {transactionSum}</p>
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
