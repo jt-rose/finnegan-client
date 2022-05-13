@@ -11,6 +11,10 @@ const Index = () => {
   const recurringFetch = RecurringTransaction.useFetch();
   console.log("recurring data: ", recurringFetch.data);
 
+  const rt = recurringFetch.data
+    ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
+    : [];
+  console.log("recurring calc: ", rt);
   //   const createTransaction = () =>
   //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
