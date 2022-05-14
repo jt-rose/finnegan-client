@@ -8,8 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ITransaction } from "../models/Transaction";
 import { CategoryIcon } from "./CategoryIcons";
-import { Typography } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import { CRUDIcons } from "./CrudIcons";
+import { useState } from "react";
 
 const TransactionDate = (props: { date: Date }) => {
   const date = new Date(props.date);
@@ -43,27 +44,59 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 const Row = (props: { transaction: ITransaction }) => {
   const { transaction } = props;
+  const [openModal, setOpenModal] = useState(false);
   return (
-    <StyledTableRow key={transaction.id}>
-      <StyledTableCell component="th" scope="row">
-        <Typography variant="h5">{transaction.amount}</Typography>
-      </StyledTableCell>
-      <StyledTableCell align="right">
-        {/*transaction.category*/}
-        <CategoryIcon category={transaction.category} />
-      </StyledTableCell>
-      <StyledTableCell align="right">
-        <TransactionDate date={transaction.date} />
-      </StyledTableCell>
-    </StyledTableRow>
+    <>
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {transaction.amount}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {transaction.category}
+          </Typography>
+        </Box>
+      </Modal>
+      {/*  */}
+      <StyledTableRow key={transaction.id} onClick={() => setOpenModal(true)}>
+        <StyledTableCell component="th" scope="row">
+          <Typography variant="h5">{transaction.amount}</Typography>
+        </StyledTableCell>
+        <StyledTableCell align="right">
+          {/*transaction.category*/}
+          <CategoryIcon category={transaction.category} />
+        </StyledTableCell>
+        <StyledTableCell align="right">
+          <TransactionDate date={transaction.date} />
+        </StyledTableCell>
+      </StyledTableRow>
+    </>
   );
 };
 
 export default function TransactionTables(props: {
   transactions: ITransaction[];
 }) {
+  const [hasOpenModal, setOpenModal] = useState();
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">

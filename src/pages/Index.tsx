@@ -9,6 +9,12 @@ const Index = () => {
   const transactionFetch = Transaction.usePaginatedFetch();
 
   const recurringFetch = RecurringTransaction.useFetch();
+
+  const sumFetch = Transaction.useTransactionSumFetch();
+
+  const allDataLoaded =
+    transactionFetch.data && recurringFetch.data && sumFetch.data;
+
   console.log("recurring data: ", recurringFetch.data);
 
   const calculatedRecurringTransactions = recurringFetch.data
@@ -18,11 +24,11 @@ const Index = () => {
     (sum, recurring) => sum + recurring.totalAmount,
     0
   );
+
   console.log("recurring calc: ", calculatedRecurringTransactions);
   //   const createTransaction = () =>
   //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
 
-  const sumFetch = Transaction.useTransactionSumFetch();
   console.log("sumFetch: ", sumFetch);
   console.log("rt-sum: ", recurringTransactionsSum);
 
