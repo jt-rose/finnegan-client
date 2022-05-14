@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "react-query";
+import { QueryClient, useInfiniteQuery, useQuery } from "react-query";
 import { CATEGORY } from "../enums/CATEGORY";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";

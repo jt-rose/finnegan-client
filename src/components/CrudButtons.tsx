@@ -28,9 +28,14 @@ const EditButton = () => {
   );
 };
 
-const DeleteButton = () => {
+const DeleteButton = (props: { handleRemove: any }) => {
   return (
-    <Button variant="contained" color="error" endIcon={<HighlightOffIcon />}>
+    <Button
+      onClick={props.handleRemove}
+      variant="contained"
+      color="error"
+      endIcon={<HighlightOffIcon />}
+    >
       Delete
     </Button>
   );

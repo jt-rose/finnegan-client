@@ -11,6 +11,7 @@ import { CategoryIcon } from "./CategoryIcons";
 import { Box, Modal, Typography } from "@mui/material";
 import { CRUDButtons } from "./CrudButtons";
 import { useState } from "react";
+import { useQueryClient } from "react-query";
 
 const TransactionDate = (props: { date: Date }) => {
   const date = new Date(props.date);
@@ -59,6 +60,15 @@ const style = {
 const Row = (props: { transaction: ITransaction }) => {
   const { transaction } = props;
   const [openModal, setOpenModal] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const handleRemove = async () => {
+    await Transaction.remove(transaction);
+    queryClient.invalidateQueries();
+    setOpenModal(false);
+    // refresh query
+  };
   return (
     <>
       <Modal
@@ -82,7 +92,7 @@ const Row = (props: { transaction: ITransaction }) => {
           </Typography>
           <CRUDButtons.CreateButton />
           <CRUDButtons.EditButton />
-          <CRUDButtons.DeleteButton />
+          <CRUDButtons.DeleteButton handleRemove={handleRemove} />
         </Box>
       </Modal>
       {/*  */}
