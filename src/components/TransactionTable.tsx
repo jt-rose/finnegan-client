@@ -6,10 +6,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ITransaction } from "../models/Transaction";
+import { ITransaction, Transaction } from "../models/Transaction";
 import { CategoryIcon } from "./CategoryIcons";
 import { Box, Modal, Typography } from "@mui/material";
-import { CRUDIcons } from "./CrudIcons";
+import { CRUDButtons } from "./CrudButtons";
 import { useState } from "react";
 
 const TransactionDate = (props: { date: Date }) => {
@@ -72,8 +72,17 @@ const Row = (props: { transaction: ITransaction }) => {
             {transaction.amount}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {transaction.category}
+            CATEGORY: {transaction.category}
           </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            DATE: <TransactionDate date={transaction.date} />
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            NOTE: {transaction.note ? transaction.note : "N/A"}
+          </Typography>
+          <CRUDButtons.CreateButton />
+          <CRUDButtons.EditButton />
+          <CRUDButtons.DeleteButton />
         </Box>
       </Modal>
       {/*  */}
