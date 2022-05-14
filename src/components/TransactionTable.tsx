@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import { ITransaction } from "../models/Transaction";
 import { CategoryIcon } from "./CategoryIcons";
 import { Typography } from "@mui/material";
+import { CRUDIcons } from "./CrudIcons";
 
 const TransactionDate = (props: { date: Date }) => {
   const date = new Date(props.date);
@@ -42,6 +43,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const Row = (props: { transaction: ITransaction }) => {
+  const { transaction } = props;
+  return (
+    <StyledTableRow key={transaction.id}>
+      <StyledTableCell component="th" scope="row">
+        <Typography variant="h5">{transaction.amount}</Typography>
+      </StyledTableCell>
+      <StyledTableCell align="right">
+        {/*transaction.category*/}
+        <CategoryIcon category={transaction.category} />
+      </StyledTableCell>
+      <StyledTableCell align="right">
+        <TransactionDate date={transaction.date} />
+      </StyledTableCell>
+    </StyledTableRow>
+  );
+};
+
 export default function TransactionTables(props: {
   transactions: ITransaction[];
 }) {
@@ -57,18 +76,7 @@ export default function TransactionTables(props: {
         </TableHead>
         <TableBody>
           {props.transactions.map((transaction) => (
-            <StyledTableRow key={transaction.id}>
-              <StyledTableCell component="th" scope="row">
-                <Typography variant="h5">{transaction.amount}</Typography>
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                {/*transaction.category*/}
-                <CategoryIcon category={transaction.category} />
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                <TransactionDate date={transaction.date} />
-              </StyledTableCell>
-            </StyledTableRow>
+            <Row transaction={transaction} />
           ))}
         </TableBody>
       </Table>
