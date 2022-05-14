@@ -3,6 +3,7 @@ import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
 import SimpleAccordion from "../components/TransactionAccordion";
 import TransactionTables from "../components/TransactionTable";
+import { Typography } from "@mui/material";
 
 const Index = () => {
   //const userFetch = User.useFetch();
@@ -38,10 +39,8 @@ const Index = () => {
       : "...loading";
   return (
     <>
-      <p>SUM: {transactionSum}</p>
-      <button onClick={() => transactionFetch.fetchNextPage()}>
-        load more
-      </button>
+      <Typography variant="h2">SUM: {transactionSum}</Typography>
+
       <TransactionTables
         transactions={
           transactionFetch.data
@@ -56,6 +55,9 @@ const Index = () => {
             : []
         }
       /> */}
+      <button onClick={() => transactionFetch.fetchNextPage()}>
+        load more
+      </button>
       <p onClick={() => User.setGoal(50000, new Date())}>Set Goal</p>
     </>
   );
