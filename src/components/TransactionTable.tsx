@@ -13,18 +13,6 @@ import { CRUDButtons } from "./CrudButtons";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 
-const TransactionDate = (props: { date: Date }) => {
-  const date = new Date(props.date);
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-  return (
-    <Typography variant="h5">
-      {month} / {day} / {year}
-    </Typography>
-  );
-};
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -85,7 +73,7 @@ const Row = (props: { transaction: ITransaction }) => {
             CATEGORY: {transaction.category}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            DATE: <TransactionDate date={transaction.date} />
+            DATE: {Transaction.formatDate(transaction)}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             NOTE: {transaction.note ? transaction.note : "N/A"}
@@ -105,7 +93,9 @@ const Row = (props: { transaction: ITransaction }) => {
           <CategoryIcon category={transaction.category} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          <TransactionDate date={transaction.date} />
+          <Typography variant="h5">
+            {Transaction.formatDate(transaction)}
+          </Typography>
         </StyledTableCell>
       </StyledTableRow>
     </>

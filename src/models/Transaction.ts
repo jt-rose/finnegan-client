@@ -24,6 +24,17 @@ export class Transaction {
     });
   }
 
+  public static formatDate(transaction: ITransaction) {
+    // convert to date object in case currently date-string
+    const date = new Date(transaction.date);
+
+    // get month day and year
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} / ${day} / ${year}`;
+  }
+
   public static get useFetch() {
     return () =>
       useQuery<ITransaction[], Error>("transactions", () =>
