@@ -13,17 +13,21 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/user" element={<Profile />} />
-        <Route path="/user/edit" element={<EditProfile />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/stats" element={<Stats />} />
-      </Routes>
-    </QueryClientProvider>
+    <div className="full-page">
+      <QueryClientProvider client={queryClient}>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/user" element={<Profile />} />
+            <Route path="/user/edit" element={<EditProfile />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/stats" element={<Stats />} />
+          </Routes>
+        </main>
+      </QueryClientProvider>
+    </div>
   );
 }
 
