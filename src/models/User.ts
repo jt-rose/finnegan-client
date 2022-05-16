@@ -53,7 +53,8 @@ export class User {
   }
 
   public static get useFetch() {
-    return () => useQuery<IUser, Error>("user", () => get(User.URL));
+    return () =>
+      useQuery<IUser, Error>("user", () => get(User.URL), { retry: false });
   }
 
   public static setGoal(goal: number, date: Date) {

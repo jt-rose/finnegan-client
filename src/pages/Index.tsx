@@ -4,14 +4,22 @@ import { User } from "../models/User";
 import SimpleAccordion from "../components/TransactionAccordion";
 import TransactionTables from "../components/TransactionTable";
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router";
 
 const Index = () => {
-  //const userFetch = User.useFetch();
+  const userFetch = User.useFetch();
+
   const transactionFetch = Transaction.usePaginatedFetch();
 
   const recurringFetch = RecurringTransaction.useFetch();
 
   const sumFetch = Transaction.useTransactionSumFetch();
+
+  const navigate = useNavigate();
+
+  if (!userFetch.isLoading && userFetch.error) {
+    navigate("/login");
+  }
 
   const allDataLoaded =
     transactionFetch.data && recurringFetch.data && sumFetch.data;
