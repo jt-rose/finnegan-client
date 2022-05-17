@@ -134,7 +134,7 @@ export class RecurringTransaction extends Transaction {
     endDate: Date | null,
     note?: string
   ) {
-    super(amount, category, note);
+    super(amount, category, new Date(), note);
     this.cycle = cycle;
     this.startDate = startDate;
     this.endDate = endDate;

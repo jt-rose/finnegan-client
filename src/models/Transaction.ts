@@ -76,10 +76,10 @@ export class Transaction {
     return remove(Transaction.URL + "/" + transaction.id);
   }
 
-  constructor(amount: number, category: CATEGORY, note?: string) {
+  constructor(amount: number, category: CATEGORY, date: Date, note?: string) {
     this.amount = amount;
     this.category = category;
-    this.date = new Date();
+    this.date = date;
     this.note = note;
   }
 }
