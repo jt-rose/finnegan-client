@@ -11,6 +11,7 @@ import { useState } from "react";
 import { CATEGORY, categoryList } from "../enums/CATEGORY";
 import { ITransaction, Transaction } from "../models/Transaction";
 import { CRUDButtons } from "./CrudButtons";
+import { useQueryClient } from "react-query";
 
 const style = {
   position: "absolute" as "absolute",
@@ -31,10 +32,10 @@ const UpdateCard = (props: {
   const formStartingData = props.transaction
     ? props.transaction
     : {
-        amount: undefined,
-        category: undefined,
-        note: undefined,
-        date: undefined,
+        amount: 0,
+        category: "OTHER",
+        note: "",
+        date: new Date(),
       };
 
   const [category, setCategory] = useState(formStartingData.category);
@@ -42,11 +43,13 @@ const UpdateCard = (props: {
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
 
+  const queryClient = useQueryClient();
+
   const createTransaction = async () => {
-    const fmtAmount = amount ? amount : 0;
-    const fmtCategory = category ? category : "OTHER";
-    const fmtDate = date ? date : new Date();
-    await new Transaction(fmtAmount, fmtCategory, fmtDate, note).save();
+    const n = new Transaction(amount, category as CATEGORY, date, note);
+    console.log(n);
+    await n.save();
+    queryClient.invalidateQueries();
     props.handleCancel();
   };
 
@@ -88,15 +91,6 @@ const UpdateCard = (props: {
               {c}
             </MenuItem>
           ))}
-          {/* <MenuItem value={"GROCERIES"}>Groceries</MenuItem>
-          <MenuItem value={"UTILITIES"}>Utilities</MenuItem>
-          <MenuItem value={"HOME"}>Home</MenuItem>
-          <MenuItem value={"SCHOOL"}>School</MenuItem>
-          <MenuItem value={"TRANSPORTATION"}>Transportation</MenuItem>
-          <MenuItem value={"MEDICAL"}>Medical</MenuItem>
-          <MenuItem value={"ENTERTAINMENT"}>Entertainment</MenuItem>
-          <MenuItem value={"SHOPPING"}>Shopping</MenuItem>
-          <MenuItem value={"OTHER"}>Other</MenuItem> */}
         </TextField>
 
         <TextField
