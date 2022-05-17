@@ -78,7 +78,7 @@ const Row = (props: { transaction: ITransaction }) => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             NOTE: {transaction.note ? transaction.note : "N/A"}
           </Typography>
-          <CRUDButtons.CreateButton />
+
           <CRUDButtons.EditButton />
           <CRUDButtons.DeleteButton handleRemove={handleRemove} />
         </Box>
@@ -105,7 +105,6 @@ const Row = (props: { transaction: ITransaction }) => {
 export default function TransactionTables(props: {
   transactions: ITransaction[];
 }) {
-  const [hasOpenModal, setOpenModal] = useState();
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
