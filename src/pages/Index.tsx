@@ -26,11 +26,6 @@ const Index = () => {
     navigate("/login");
   }
 
-  const allDataLoaded =
-    transactionFetch.data && recurringFetch.data && sumFetch.data;
-
-  console.log("recurring data: ", recurringFetch.data);
-
   const calculatedRecurringTransactions = recurringFetch.data
     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
     : [];
@@ -39,17 +34,11 @@ const Index = () => {
     0
   );
 
-  console.log("recurring calc: ", calculatedRecurringTransactions);
-  //   const createTransaction = () =>
-  //     new Transaction(5000, "SHOPPING").save().then((data) => console.log(data));
-
-  console.log("sumFetch: ", sumFetch);
-  console.log("rt-sum: ", recurringTransactionsSum);
-
   const transactionSum =
     sumFetch.data && recurringFetch.data
       ? sumFetch.data + recurringTransactionsSum
       : "...loading";
+
   return (
     <>
       <Typography variant="h2">SUM: {transactionSum}</Typography>
@@ -61,13 +50,6 @@ const Index = () => {
             : []
         }
       />
-      {/* <SimpleAccordion
-        transactions={
-          transactionFetch.data
-            ? transactionFetch.data.pages.flatMap((p) => p.content)
-            : []
-        }
-      /> */}
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
@@ -84,7 +66,9 @@ const Index = () => {
             aria-describedby="modal-modal-description"
           >
             <UpdateCard
-              //
+              // no transaction is provided
+              // telling the form to create a new one
+              // rather than edit an old one
               handleCancel={() => setDisplayCreateModal(false)}
             />
           </Modal>
