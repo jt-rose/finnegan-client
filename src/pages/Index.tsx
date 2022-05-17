@@ -84,15 +84,8 @@ const Index = () => {
             aria-describedby="modal-modal-description"
           >
             <UpdateCard
-              transaction={{
-                id: -1,
-                amount: 0,
-                category: "OTHER",
-                date: new Date(),
-                owner: userFetch.data,
-                note: "",
-              }}
-              addOrUpdate="ADD"
+              //
+              handleCancel={() => setDisplayCreateModal(false)}
             />
           </Modal>
         </>

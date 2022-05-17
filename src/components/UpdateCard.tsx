@@ -25,14 +25,22 @@ const style = {
 };
 
 const UpdateCard = (props: {
-  transaction: ITransaction;
-  addOrUpdate: "ADD" | "UPDATE";
+  transaction?: ITransaction;
+  handleCancel: any;
 }) => {
-  const { transaction, addOrUpdate } = props;
-  const [category, setCategory] = useState(transaction.category);
-  const [amount, setAmount] = useState(transaction.amount);
-  const [note, setNote] = useState(transaction.note);
-  const [date, setDate] = useState(transaction.date);
+  const formStartingData = props.transaction
+    ? props.transaction
+    : {
+        amount: undefined,
+        category: undefined,
+        note: undefined,
+        date: undefined,
+      };
+
+  const [category, setCategory] = useState(formStartingData.category);
+  const [amount, setAmount] = useState(formStartingData.amount);
+  const [note, setNote] = useState(formStartingData.note);
+  const [date, setDate] = useState(formStartingData.date);
 
   return (
     <Box sx={style}>
@@ -88,9 +96,9 @@ const UpdateCard = (props: {
 
         <CRUDButtons.SaveButton
           handleSave={() => {}}
-          addOrUpdate={addOrUpdate}
+          addOrUpdate={props.transaction ? "UPDATE" : "ADD"}
         />
-        <CRUDButtons.CancelButton handleCancel={() => {}} />
+        <CRUDButtons.CancelButton handleCancel={props.handleCancel} />
       </FormControl>
     </Box>
   );
