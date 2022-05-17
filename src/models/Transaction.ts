@@ -16,9 +16,10 @@ export class Transaction {
   public static URL = BASE_ROUTE + "/transactions";
 
   save() {
+    console.log("this cat: ", this.category);
     return post(Transaction.URL, {
       amount: this.amount,
-      catgeory: this.category,
+      category: this.category,
       date: this.date,
       note: this.note,
     });
