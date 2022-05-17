@@ -25,7 +25,7 @@ const style = {
   p: 4,
 };
 
-const UpdateCard = (props: {
+const TransactionForm = (props: {
   transaction?: ITransaction;
   handleCancel: any;
 }) => {
@@ -109,4 +109,4 @@ const UpdateCard = (props: {
   );
 };
 
-export default UpdateCard;
+export default TransactionForm;

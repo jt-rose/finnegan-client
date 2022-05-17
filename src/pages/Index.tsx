@@ -1,12 +1,11 @@
 import { Transaction } from "../models/Transaction";
 import { RecurringTransaction } from "../models/RecurringTransaction";
 import { User } from "../models/User";
-import SimpleAccordion from "../components/TransactionAccordion";
 import TransactionTables from "../components/TransactionTable";
 import { Modal, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 import { CRUDButtons } from "../components/CrudButtons";
-import UpdateCard from "../components/UpdateCard";
+import TransactionForm from "../components/TransactionForm";
 import { useState } from "react";
 
 const Index = () => {
@@ -65,7 +64,7 @@ const Index = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <UpdateCard
+            <TransactionForm
               // no transaction is provided
               // telling the form to create a new one
               // rather than edit an old one
