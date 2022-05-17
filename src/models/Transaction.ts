@@ -2,7 +2,7 @@ import { QueryClient, useInfiniteQuery, useQuery } from "react-query";
 import { CATEGORY } from "../enums/CATEGORY";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
-import { User } from "./User";
+import { IUser } from "./User";
 
 // The Transaction class is used to construct a Transaction entity
 // and the ITransaction interface references a Transaction
@@ -85,5 +85,5 @@ export class Transaction {
 }
 export interface ITransaction extends Omit<Transaction, "save"> {
   readonly id: number;
-  owner: User;
+  owner: IUser;
 }

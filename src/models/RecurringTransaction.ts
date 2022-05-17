@@ -4,7 +4,7 @@ import { CYCLE } from "../enums/CYCLE";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
 import { Transaction } from "./Transaction";
-import { User } from "./User";
+import { IUser } from "./User";
 import dayjs from "dayjs";
 
 export class RecurringTransaction extends Transaction {
@@ -142,5 +142,5 @@ export class RecurringTransaction extends Transaction {
 }
 export interface IRecurringTransaction extends RecurringTransaction {
   id: number;
-  owner: User;
+  owner: IUser;
 }
