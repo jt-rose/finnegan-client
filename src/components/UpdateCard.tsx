@@ -42,6 +42,16 @@ const UpdateCard = (props: {
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
 
+  const createTransaction = async () => {
+    const fmtAmount = amount ? amount : 0;
+    const fmtCategory = category ? category : "OTHER";
+    const fmtDate = date ? date : new Date();
+    await new Transaction(fmtAmount, fmtCategory, fmtDate, note).save();
+    props.handleCancel();
+  };
+
+  const editTransaction = () => {};
+
   return (
     <Box sx={style}>
       <FormControl
@@ -50,6 +60,7 @@ const UpdateCard = (props: {
       >
         {/* // ! handle NaN */}
         <TextField
+          required
           label="Amount"
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           value={amount}
@@ -95,7 +106,7 @@ const UpdateCard = (props: {
         />
 
         <CRUDButtons.SaveButton
-          handleSave={() => {}}
+          handleSave={createTransaction}
           addOrUpdate={props.transaction ? "UPDATE" : "ADD"}
         />
         <CRUDButtons.CancelButton handleCancel={props.handleCancel} />
