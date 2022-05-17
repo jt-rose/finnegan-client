@@ -36,7 +36,10 @@ const UpdateCard = (props: {
 
   return (
     <Box sx={style}>
-      <FormControl fullWidth>
+      <FormControl
+        fullWidth
+        sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+      >
         {/* // ! handle NaN */}
         <TextField
           label="Amount"
@@ -54,9 +57,8 @@ const UpdateCard = (props: {
           renderInput={(params) => <TextField {...params} />}
         />
 
-        <InputLabel id="transaction-category-select-label">Category</InputLabel>
-        <Select
-          labelId="transaction-category-select-label"
+        <TextField
+          select
           id="transaction-category-select"
           value={category}
           label="Category"
@@ -76,7 +78,7 @@ const UpdateCard = (props: {
           <MenuItem value={"ENTERTAINMENT"}>Entertainment</MenuItem>
           <MenuItem value={"SHOPPING"}>Shopping</MenuItem>
           <MenuItem value={"OTHER"}>Other</MenuItem> */}
-        </Select>
+        </TextField>
 
         <TextField
           label="Note"
