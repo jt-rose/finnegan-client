@@ -81,11 +81,25 @@ const TransactionForm = (props: {
   const [cycle, setCycle] = useState<CYCLE>(defaultCycle);
   const [isRecurring, setIsRecurring] = useState(false);
 
+  // set up query client for invalidating cache upon updates
   const queryClient = useQueryClient();
 
+  // set up create function to add a Transaction
+  // or Recurring Transaction based on "isRecurring" boolean
   const createTransaction = async () => {
-    // create and persist new transaction
-    await new Transaction(amount, category as CATEGORY, date, note).save();
+    // create and persist new transaction or recurring transaction
+    if (isRecurring) {
+      await new RecurringTransaction(
+        amount,
+        category as CATEGORY,
+        cycle,
+        startDate,
+        endDate,
+        note
+      ).save();
+    } else {
+      await new Transaction(amount, category as CATEGORY, date, note).save();
+    }
 
     // reset query cache to trigger updates
     queryClient.invalidateQueries();
@@ -94,25 +108,10 @@ const TransactionForm = (props: {
     props.handleCancel();
   };
 
-  const createRecurringTransaction = async () => {
-    // create and persist new transaction
-    await new RecurringTransaction(
-      amount,
-      category as CATEGORY,
-      cycle,
-      startDate,
-      endDate,
-      note
-    ).save();
-
-    // reset query cache to trigger updates
-    queryClient.invalidateQueries();
-
-    // trigger function to hide modal
-    props.handleCancel();
-  };
-
-  // ! discern edit trasaction and editRecurringTransaction
+  // set up edit function that updates either a Transaction
+  // or Recurring Transaction based on the type recieved
+  // and can fall back to a type-safe () => {} placeholder
+  // when the transaction prop is null
   const editTransaction = props.transaction
     ? async () => {
         // set transaction values to currently selected options
@@ -122,8 +121,19 @@ const TransactionForm = (props: {
         updatedTransaction.date = date;
         updatedTransaction.note = note;
 
-        // edit transaction in database
-        await Transaction.edit(updatedTransaction);
+        // if recurring transaction, update values specific to that type
+        // and edit the recurring transaction
+        if ("cycle" in updatedTransaction) {
+          updatedTransaction.cycle = cycle;
+          updatedTransaction.startDate = startDate;
+          updatedTransaction.endDate = endDate;
+
+          await RecurringTransaction.edit(updatedTransaction);
+
+          // if normal transaction, edit normal transaction
+        } else {
+          await Transaction.edit(updatedTransaction);
+        }
 
         // reset query cache to trigger updates
         queryClient.invalidateQueries();
@@ -133,44 +143,10 @@ const TransactionForm = (props: {
       }
     : async () => {};
 
-  const editRecurringTransaction =
-    props.transaction && "cycle" in props.transaction
-      ? async () => {
-          // set transaction values to currently selected options
-          const updatedTransaction = props.transaction as IRecurringTransaction;
-          updatedTransaction.amount = amount;
-          updatedTransaction.category = category as CATEGORY;
-          updatedTransaction.date = date;
-          updatedTransaction.note = note;
-          updatedTransaction.cycle = cycle;
-          updatedTransaction.startDate = startDate;
-          updatedTransaction.endDate = endDate;
+  // pick whether to create or edit based on if transaction was passed in via props
+  const save = props.transaction ? createTransaction : editTransaction;
 
-          // edit recurring transaction in database
-          await RecurringTransaction.edit(updatedTransaction);
-
-          // reset query cache to trigger updates
-          queryClient.invalidateQueries();
-
-          // trigger function to hide modal
-          props.handleCancel();
-        }
-      : editTransaction;
-
-  let save = createTransaction;
-
-  if (props.transaction) {
-    if (isRecurring) {
-      save = editRecurringTransaction;
-    } else {
-      save = editTransaction;
-    }
-  } else {
-    if (isRecurring) {
-      save = createRecurringTransaction;
-    }
-  }
-
+  // handle select behavior for recurring transaction frequency
   const handleCycle = (
     event: React.MouseEvent<HTMLElement>,
     newCycle: string | null
@@ -242,20 +218,6 @@ const TransactionForm = (props: {
               renderInput={(params) => <TextField {...params} />}
             />
 
-            {/* <TextField
-              select
-              id="recurring-cycle-select"
-              value={cycle}
-              label="Frequency"
-              onChange={(e) => setCycle(e.target.value as CYCLE)}
-            >
-              {cycleList.map((c) => (
-                <MenuItem key={c + "-select"} value={c}>
-                  {c}
-                </MenuItem>
-              ))}
-            </TextField> */}
-
             <ToggleButtonGroup
               value={cycle}
               exclusive
@@ -273,34 +235,6 @@ const TransactionForm = (props: {
                   <Typography>{c}</Typography>
                 </ToggleButton>
               ))}
-              {/* <ToggleButton
-                value="left"
-                aria-label="left aligned"
-                sx={{ width: "120px" }}
-              >
-                <Typography>DAILY</Typography>
-              </ToggleButton>
-              <ToggleButton
-                value="center"
-                aria-label="centered"
-                sx={{ width: "120px" }}
-              >
-                <Typography>WEEKLY</Typography>
-              </ToggleButton>
-              <ToggleButton
-                value="right"
-                aria-label="right aligned"
-                sx={{ width: "120px" }}
-              >
-                <Typography>MONTHLY</Typography>
-              </ToggleButton>
-              <ToggleButton
-                value="justify"
-                aria-label="justified"
-                sx={{ width: "120px" }}
-              >
-                <Typography>QUARTERLY</Typography>
-              </ToggleButton> */}
             </ToggleButtonGroup>
           </>
         )}
