@@ -1,9 +1,7 @@
 import {
   FormControl,
   FormControlLabel,
-  InputLabel,
   MenuItem,
-  Select,
   Switch,
   TextField,
   ToggleButton,
@@ -18,7 +16,10 @@ import { ITransaction, Transaction } from "../models/Transaction";
 import { CRUDButtons } from "./CrudButtons";
 import { useQueryClient } from "react-query";
 import { CYCLE, cycleList } from "../enums/CYCLE";
-import { RecurringTransaction } from "../models/RecurringTransaction";
+import {
+  IRecurringTransaction,
+  RecurringTransaction,
+} from "../models/RecurringTransaction";
 
 const style = {
   position: "absolute" as "absolute",
@@ -33,7 +34,7 @@ const style = {
 };
 
 const TransactionForm = (props: {
-  transaction?: ITransaction;
+  transaction?: ITransaction | IRecurringTransaction;
   handleCancel: any;
 }) => {
   const formStartingData = props.transaction
@@ -43,15 +44,24 @@ const TransactionForm = (props: {
         category: "OTHER",
         note: "",
         date: new Date(),
+        startDate: new Date(),
+        endDate: null,
+        cycle: "DAILY" as CYCLE,
       };
 
   const [category, setCategory] = useState(formStartingData.category);
   const [amount, setAmount] = useState(formStartingData.amount);
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
-  const [startDate, setStartDate] = useState(formStartingData.date);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [cycle, setCycle] = useState("DAILY" as CYCLE);
+  const [startDate, setStartDate] = useState(
+    "startDate" in formStartingData ? formStartingData.startDate : new Date()
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    "endDate" in formStartingData ? formStartingData.endDate : null
+  );
+  const [cycle, setCycle] = useState<CYCLE>(
+    "cycle" in formStartingData ? formStartingData.cycle : "DAILY"
+  );
   const [isRecurring, setIsRecurring] = useState(false);
 
   const queryClient = useQueryClient();
@@ -85,7 +95,64 @@ const TransactionForm = (props: {
     props.handleCancel();
   };
 
-  const editTransaction = () => {};
+  // ! discern edit trasaction and editRecurringTransaction
+  const editTransaction = props.transaction
+    ? async () => {
+        // set transaction values to currently selected options
+        const updatedTransaction = props.transaction!;
+        updatedTransaction.amount = amount;
+        updatedTransaction.category = category as CATEGORY;
+        updatedTransaction.date = date;
+        updatedTransaction.note = note;
+
+        // edit transaction in database
+        await Transaction.edit(updatedTransaction);
+
+        // reset query cache to trigger updates
+        queryClient.invalidateQueries();
+
+        // trigger function to hide modal
+        props.handleCancel();
+      }
+    : async () => {};
+
+  const editRecurringTransaction =
+    props.transaction && "cycle" in props.transaction
+      ? async () => {
+          // set transaction values to currently selected options
+          const updatedTransaction = props.transaction as IRecurringTransaction;
+          updatedTransaction.amount = amount;
+          updatedTransaction.category = category as CATEGORY;
+          updatedTransaction.date = date;
+          updatedTransaction.note = note;
+          updatedTransaction.cycle = cycle;
+          updatedTransaction.startDate = startDate;
+          updatedTransaction.endDate = endDate;
+
+          // edit recurring transaction in database
+          await RecurringTransaction.edit(updatedTransaction);
+
+          // reset query cache to trigger updates
+          queryClient.invalidateQueries();
+
+          // trigger function to hide modal
+          props.handleCancel();
+        }
+      : editTransaction;
+
+  let save = createTransaction;
+
+  if (props.transaction) {
+    if (isRecurring) {
+      save = editRecurringTransaction;
+    } else {
+      save = editTransaction;
+    }
+  } else {
+    if (isRecurring) {
+      save = createRecurringTransaction;
+    }
+  }
 
   const handleCycle = (
     event: React.MouseEvent<HTMLElement>,
@@ -242,9 +309,7 @@ const TransactionForm = (props: {
         />
 
         <CRUDButtons.SaveButton
-          handleSave={
-            isRecurring ? createRecurringTransaction : createTransaction
-          }
+          handleSave={save}
           addOrUpdate={props.transaction ? "UPDATE" : "ADD"}
         />
         <CRUDButtons.CancelButton handleCancel={props.handleCancel} />
