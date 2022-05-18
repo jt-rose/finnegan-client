@@ -17,7 +17,10 @@ export class RecurringTransaction extends Transaction {
   save() {
     return post(RecurringTransaction.URL, {
       amount: this.amount,
-      catgeory: this.category,
+      category: this.category,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      cycle: this.cycle,
       date: this.date,
       note: this.note,
     });
