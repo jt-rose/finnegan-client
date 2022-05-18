@@ -147,7 +147,7 @@ const TransactionForm = (props: {
     : async () => {};
 
   // pick whether to create or edit based on if transaction was passed in via props
-  const save = props.transaction ? createTransaction : editTransaction;
+  const save = props.transaction ? editTransaction : createTransaction;
 
   // handle select behavior for recurring transaction frequency
   const handleCycle = (

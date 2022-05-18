@@ -45,6 +45,10 @@ const Index = () => {
     .flat();
   console.log("rt: ", rt);
 
+  // ! sort normal transactions
+  // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
+  // ! combine them and visually organize by date
+
   const transactionSum =
     sumFetch.data && recurringFetch.data
       ? sumFetch.data + recurringTransactionsSum
