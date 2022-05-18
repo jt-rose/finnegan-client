@@ -1,8 +1,10 @@
 import {
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -12,6 +14,7 @@ import { CATEGORY, categoryList } from "../enums/CATEGORY";
 import { ITransaction, Transaction } from "../models/Transaction";
 import { CRUDButtons } from "./CrudButtons";
 import { useQueryClient } from "react-query";
+import { CYCLE, cycleList } from "../enums/CYCLE";
 
 const style = {
   position: "absolute" as "absolute",
@@ -42,6 +45,10 @@ const TransactionForm = (props: {
   const [amount, setAmount] = useState(formStartingData.amount);
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
+  const [startDate, setStartDate] = useState(formStartingData.date);
+  const [endDate, setEndDate] = useState(formStartingData.date);
+  const [cycle, setCycle] = useState("DAILY");
+  const [isRecurring, setIsRecurring] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -64,6 +71,16 @@ const TransactionForm = (props: {
         fullWidth
         sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isRecurring}
+              onChange={() => setIsRecurring(!isRecurring)}
+            />
+          }
+          label="Recurring"
+        />
+
         {/* // ! handle NaN */}
         <TextField
           required
@@ -73,14 +90,52 @@ const TransactionForm = (props: {
           onChange={(e) => setAmount(parseInt(e.target.value))}
         />
 
-        <DatePicker
-          label="Date"
-          value={date}
-          onChange={(newValue) => {
-            setDate(newValue as Date);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
+        {!isRecurring && (
+          <DatePicker
+            label="Date"
+            value={date}
+            onChange={(newValue) => {
+              setDate(newValue as Date);
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        )}
+
+        {isRecurring && (
+          <>
+            <DatePicker
+              label="Start Date"
+              value={startDate}
+              onChange={(newValue) => {
+                setStartDate(newValue as Date);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+
+            <DatePicker
+              label="End Date"
+              value={endDate}
+              onChange={(newValue) => {
+                setEndDate(newValue as Date);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+
+            <TextField
+              select
+              id="recurring-cycle-select"
+              value={cycle}
+              label="Frequency"
+              onChange={(e) => setCycle(e.target.value as CYCLE)}
+            >
+              {cycleList.map((c) => (
+                <MenuItem key={c + "-select"} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </TextField>
+          </>
+        )}
 
         <TextField
           select
