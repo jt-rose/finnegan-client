@@ -18,6 +18,7 @@ import { ITransaction, Transaction } from "../models/Transaction";
 import { CRUDButtons } from "./CrudButtons";
 import { useQueryClient } from "react-query";
 import { CYCLE, cycleList } from "../enums/CYCLE";
+import { RecurringTransaction } from "../models/RecurringTransaction";
 
 const style = {
   position: "absolute" as "absolute",
@@ -50,7 +51,7 @@ const TransactionForm = (props: {
   const [date, setDate] = useState(formStartingData.date);
   const [startDate, setStartDate] = useState(formStartingData.date);
   const [endDate, setEndDate] = useState(formStartingData.date);
-  const [cycle, setCycle] = useState("DAILY");
+  const [cycle, setCycle] = useState("DAILY" as CYCLE);
   const [isRecurring, setIsRecurring] = useState(false);
 
   const queryClient = useQueryClient();
@@ -73,7 +74,7 @@ const TransactionForm = (props: {
     newCycle: string | null
   ) => {
     if (newCycle) {
-      setCycle(newCycle);
+      setCycle(newCycle as CYCLE);
     }
   };
 
@@ -160,7 +161,17 @@ const TransactionForm = (props: {
               aria-label="frequency"
               sx={{ display: "flex" }}
             >
-              <ToggleButton
+              {cycleList.map((c) => (
+                <ToggleButton
+                  value={c}
+                  aria-label={c}
+                  sx={{ width: "120px" }}
+                  key={c + "-select"}
+                >
+                  <Typography>{c}</Typography>
+                </ToggleButton>
+              ))}
+              {/* <ToggleButton
                 value="left"
                 aria-label="left aligned"
                 sx={{ width: "120px" }}
@@ -187,7 +198,7 @@ const TransactionForm = (props: {
                 sx={{ width: "120px" }}
               >
                 <Typography>QUARTERLY</Typography>
-              </ToggleButton>
+              </ToggleButton> */}
             </ToggleButtonGroup>
           </>
         )}
