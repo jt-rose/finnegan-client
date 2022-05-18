@@ -6,6 +6,9 @@ import {
   Select,
   Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Box } from "@mui/system";
@@ -65,6 +68,15 @@ const TransactionForm = (props: {
 
   const editTransaction = () => {};
 
+  const handleCycle = (
+    event: React.MouseEvent<HTMLElement>,
+    newCycle: string | null
+  ) => {
+    if (newCycle) {
+      setCycle(newCycle);
+    }
+  };
+
   return (
     <Box sx={style}>
       <FormControl
@@ -121,7 +133,7 @@ const TransactionForm = (props: {
               renderInput={(params) => <TextField {...params} />}
             />
 
-            <TextField
+            {/* <TextField
               select
               id="recurring-cycle-select"
               value={cycle}
@@ -133,7 +145,44 @@ const TransactionForm = (props: {
                   {c}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
+
+            <ToggleButtonGroup
+              value={cycle}
+              exclusive
+              onChange={handleCycle}
+              aria-label="frequency"
+              sx={{ display: "flex" }}
+            >
+              <ToggleButton
+                value="left"
+                aria-label="left aligned"
+                sx={{ width: "120px" }}
+              >
+                <Typography>DAILY</Typography>
+              </ToggleButton>
+              <ToggleButton
+                value="center"
+                aria-label="centered"
+                sx={{ width: "120px" }}
+              >
+                <Typography>WEEKLY</Typography>
+              </ToggleButton>
+              <ToggleButton
+                value="right"
+                aria-label="right aligned"
+                sx={{ width: "120px" }}
+              >
+                <Typography>MONTHLY</Typography>
+              </ToggleButton>
+              <ToggleButton
+                value="justify"
+                aria-label="justified"
+                sx={{ width: "120px" }}
+              >
+                <Typography>QUARTERLY</Typography>
+              </ToggleButton>
+            </ToggleButtonGroup>
           </>
         )}
 
