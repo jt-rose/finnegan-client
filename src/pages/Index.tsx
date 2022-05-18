@@ -22,6 +22,10 @@ const Index = () => {
     navigate("/login");
   }
 
+  const transactions = transactionFetch.data
+    ? transactionFetch.data.pages.flatMap((p) => p.content)
+    : [];
+
   const calculatedRecurringTransactions = recurringFetch.data
     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
     : [];
@@ -58,13 +62,7 @@ const Index = () => {
     <>
       <Typography variant="h2">SUM: {transactionSum}</Typography>
 
-      <TransactionTables
-        transactions={
-          transactionFetch.data
-            ? transactionFetch.data.pages.flatMap((p) => p.content)
-            : []
-        }
-      />
+      <TransactionTables transactions={transactions} />
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
