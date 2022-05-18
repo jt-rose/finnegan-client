@@ -50,7 +50,7 @@ const TransactionForm = (props: {
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
   const [startDate, setStartDate] = useState(formStartingData.date);
-  const [endDate, setEndDate] = useState(formStartingData.date);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [cycle, setCycle] = useState("DAILY" as CYCLE);
   const [isRecurring, setIsRecurring] = useState(false);
 
