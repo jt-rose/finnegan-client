@@ -46,10 +46,13 @@ const TransactionForm = (props: {
   const queryClient = useQueryClient();
 
   const createTransaction = async () => {
-    const n = new Transaction(amount, category as CATEGORY, date, note);
-    console.log(n);
-    await n.save();
+    // create and persist new transaction
+    await new Transaction(amount, category as CATEGORY, date, note).save();
+
+    // reset query cache to trigger updates
     queryClient.invalidateQueries();
+
+    // trigger function to hide modal
     props.handleCancel();
   };
 
