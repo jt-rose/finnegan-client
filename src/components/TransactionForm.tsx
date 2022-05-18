@@ -33,6 +33,18 @@ const style = {
   p: 4,
 };
 
+// default form data to use if no transaction / recurring transaction
+// is provided
+const defaultFormData = {
+  amount: 0,
+  category: "OTHER",
+  note: "",
+  date: new Date(),
+  startDate: new Date(),
+  endDate: null,
+  cycle: "DAILY" as CYCLE,
+};
+
 // the transaction prop can be null, a Transaction,
 // or a Recurring Transaction
 
@@ -45,31 +57,28 @@ const TransactionForm = (props: {
   transaction?: ITransaction | IRecurringTransaction;
   handleCancel: any;
 }) => {
+  // set up initial form data based on props or default settings
   const formStartingData = props.transaction
     ? props.transaction
-    : {
-        amount: 0,
-        category: "OTHER",
-        note: "",
-        date: new Date(),
-        startDate: new Date(),
-        endDate: null,
-        cycle: "DAILY" as CYCLE,
-      };
+    : defaultFormData;
 
+  // if transaction prop is not a recurring transaction
+  // provide default values for cycle and start / end dates
+  const defaultStartDate =
+    "startDate" in formStartingData ? formStartingData.startDate : new Date();
+  const defaultEndDate =
+    "endDate" in formStartingData ? formStartingData.endDate : null;
+  const defaultCycle =
+    "cycle" in formStartingData ? formStartingData.cycle : "DAILY";
+
+  // set up form state
   const [category, setCategory] = useState(formStartingData.category);
   const [amount, setAmount] = useState(formStartingData.amount);
   const [note, setNote] = useState(formStartingData.note);
   const [date, setDate] = useState(formStartingData.date);
-  const [startDate, setStartDate] = useState(
-    "startDate" in formStartingData ? formStartingData.startDate : new Date()
-  );
-  const [endDate, setEndDate] = useState<Date | null>(
-    "endDate" in formStartingData ? formStartingData.endDate : null
-  );
-  const [cycle, setCycle] = useState<CYCLE>(
-    "cycle" in formStartingData ? formStartingData.cycle : "DAILY"
-  );
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState<Date | null>(defaultEndDate);
+  const [cycle, setCycle] = useState<CYCLE>(defaultCycle);
   const [isRecurring, setIsRecurring] = useState(false);
 
   const queryClient = useQueryClient();
