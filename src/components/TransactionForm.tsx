@@ -33,6 +33,14 @@ const style = {
   p: 4,
 };
 
+// the transaction prop can be null, a Transaction,
+// or a Recurring Transaction
+
+// if null, the form will be used to create a new Transaction
+// or Recurring Transaction
+
+// otherwise, the form will be used to edit an existing Transaction
+// or Recurring Transaction, based on which type is received
 const TransactionForm = (props: {
   transaction?: ITransaction | IRecurringTransaction;
   handleCancel: any;
