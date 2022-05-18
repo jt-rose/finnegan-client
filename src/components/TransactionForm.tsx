@@ -83,15 +83,21 @@ const TransactionForm = (props: {
         fullWidth
         sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
-        <FormControlLabel
-          control={
-            <Switch
-              checked={isRecurring}
-              onChange={() => setIsRecurring(!isRecurring)}
-            />
-          }
-          label="Recurring"
-        />
+        {/* // ! only show switch when creating, not updating 
+        automatically set isRecurring based on type of transaction when updating
+        a transaction that already exists
+        */}
+        {!props.transaction && (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isRecurring}
+                onChange={() => setIsRecurring(!isRecurring)}
+              />
+            }
+            label="Recurring"
+          />
+        )}
 
         {/* // ! handle NaN */}
         <TextField
