@@ -12,11 +12,8 @@ const Index = () => {
   const [displayCreateModal, setDisplayCreateModal] = useState(false);
 
   const userFetch = User.useFetch();
-
   const transactionFetch = Transaction.usePaginatedFetch();
-
   const recurringFetch = RecurringTransaction.useFetch();
-
   const sumFetch = Transaction.useTransactionSumFetch();
 
   const navigate = useNavigate();
@@ -32,6 +29,21 @@ const Index = () => {
     (sum, recurring) => sum + recurring.totalAmount,
     0
   );
+
+  const rt = calculatedRecurringTransactions
+    .map((x) =>
+      x.transactionDates.flatMap(
+        (tr) =>
+          new Transaction(
+            x.recurringTransaction.amount,
+            x.recurringTransaction.category,
+            tr,
+            x.recurringTransaction.note
+          )
+      )
+    )
+    .flat();
+  console.log("rt: ", rt);
 
   const transactionSum =
     sumFetch.data && recurringFetch.data
