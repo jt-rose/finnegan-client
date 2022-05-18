@@ -25,9 +25,14 @@ const ReadMoreButton = () => {
   );
 };
 
-const EditButton = () => {
+const EditButton = (props: { handleShowEdit: any }) => {
   return (
-    <Button variant="contained" color="warning" endIcon={<EditIcon />}>
+    <Button
+      variant="contained"
+      color="warning"
+      endIcon={<EditIcon />}
+      onClick={props.handleShowEdit}
+    >
       Edit
     </Button>
   );
