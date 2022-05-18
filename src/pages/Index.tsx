@@ -11,6 +11,7 @@ import { useState } from "react";
 const Index = () => {
   const [displayCreateModal, setDisplayCreateModal] = useState(false);
 
+  // fetch data
   const userFetch = User.useFetch();
   const transactionFetch = Transaction.usePaginatedFetch();
   const recurringFetch = RecurringTransaction.useFetch();
@@ -18,22 +19,31 @@ const Index = () => {
 
   const navigate = useNavigate();
 
+  // redirect to login if unauthenticated
   if (!userFetch.isLoading && userFetch.error) {
     navigate("/login");
   }
 
+  // capture transactions across each page in a flat array
+  // these transactions will already be sorted by date server-side
   const transactions = transactionFetch.data
     ? transactionFetch.data.pages.flatMap((p) => p.content)
     : [];
 
+  // generate dates for each scheduled recurring transaction
   const calculatedRecurringTransactions = recurringFetch.data
     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
     : [];
+
+  // calculate sum of recurring transactions
   const recurringTransactionsSum = calculatedRecurringTransactions.reduce(
     (sum, recurring) => sum + recurring.totalAmount,
     0
   );
 
+  // generate transactions based on dates of recurring transactions
+  // ! limit by currently shown dates to optoimize
+  // ! store data identifying these as recurring
   const rt = calculatedRecurringTransactions
     .map((x) =>
       x.transactionDates.flatMap(
@@ -49,7 +59,6 @@ const Index = () => {
     .flat();
   console.log("rt: ", rt);
 
-  // ! sort normal transactions
   // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
   // ! combine them and visually organize by date
 
