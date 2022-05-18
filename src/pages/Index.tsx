@@ -59,6 +59,15 @@ const Index = () => {
     .flat();
   console.log("rt: ", rt);
 
+  // ! this is very hacky - create a proper interface later
+  // ! place recurring at top of each date
+  const combinedTransactions = [
+    ...transactions,
+    ...rt.map((r) => ({ ...r, id: -1, owner: userFetch.data! })),
+  ]
+    .map((x) => ({ ...x, date: new Date(x.date) }))
+    .sort((x, y) => x.date.getTime() - y.date.getTime());
+
   // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
   // ! combine them and visually organize by date
 
@@ -71,7 +80,7 @@ const Index = () => {
     <>
       <Typography variant="h2">SUM: {transactionSum}</Typography>
 
-      <TransactionTables transactions={transactions} />
+      <TransactionTables transactions={combinedTransactions} />
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
