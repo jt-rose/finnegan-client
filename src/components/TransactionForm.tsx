@@ -71,6 +71,9 @@ const TransactionForm = (props: {
   const defaultCycle =
     "cycle" in formStartingData ? formStartingData.cycle : "DAILY";
 
+  // set isRecurring state to true when receiving Recurring Transaction via props
+  const defaultRecurringState = "cycle" in formStartingData;
+
   // set up form state
   const [category, setCategory] = useState(formStartingData.category);
   const [amount, setAmount] = useState(formStartingData.amount);
@@ -79,7 +82,7 @@ const TransactionForm = (props: {
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState<Date | null>(defaultEndDate);
   const [cycle, setCycle] = useState<CYCLE>(defaultCycle);
-  const [isRecurring, setIsRecurring] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(defaultRecurringState);
 
   // set up query client for invalidating cache upon updates
   const queryClient = useQueryClient();
