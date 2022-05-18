@@ -67,6 +67,24 @@ const TransactionForm = (props: {
     props.handleCancel();
   };
 
+  const createRecurringTransaction = async () => {
+    // create and persist new transaction
+    await new RecurringTransaction(
+      amount,
+      category as CATEGORY,
+      cycle,
+      startDate,
+      endDate,
+      note
+    ).save();
+
+    // reset query cache to trigger updates
+    queryClient.invalidateQueries();
+
+    // trigger function to hide modal
+    props.handleCancel();
+  };
+
   const editTransaction = () => {};
 
   const handleCycle = (
@@ -224,7 +242,9 @@ const TransactionForm = (props: {
         />
 
         <CRUDButtons.SaveButton
-          handleSave={createTransaction}
+          handleSave={
+            isRecurring ? createRecurringTransaction : createTransaction
+          }
           addOrUpdate={props.transaction ? "UPDATE" : "ADD"}
         />
         <CRUDButtons.CancelButton handleCancel={props.handleCancel} />
