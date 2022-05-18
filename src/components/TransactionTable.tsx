@@ -12,6 +12,7 @@ import { Box, Modal, Typography } from "@mui/material";
 import { CRUDButtons } from "./CrudButtons";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
+import TransactionForm from "./TransactionForm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,8 +49,14 @@ const style = {
 const Row = (props: { transaction: ITransaction }) => {
   const { transaction } = props;
   const [openModal, setOpenModal] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
 
   const queryClient = useQueryClient();
+
+  const handleCancel = () => {
+    setShowEditForm(false);
+    setOpenModal(false);
+  };
 
   const handleRemove = async () => {
     await Transaction.remove(transaction);
@@ -65,23 +72,32 @@ const Row = (props: { transaction: ITransaction }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {transaction.amount}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            CATEGORY: {transaction.category}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            DATE: {Transaction.formatDate(transaction)}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            NOTE: {transaction.note ? transaction.note : "N/A"}
-          </Typography>
+        {showEditForm ? (
+          <TransactionForm
+            transaction={transaction}
+            handleCancel={handleCancel}
+          />
+        ) : (
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {transaction.amount}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              CATEGORY: {transaction.category}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              DATE: {Transaction.formatDate(transaction)}
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              NOTE: {transaction.note ? transaction.note : "N/A"}
+            </Typography>
 
-          <CRUDButtons.EditButton />
-          <CRUDButtons.DeleteButton handleRemove={handleRemove} />
-        </Box>
+            <CRUDButtons.EditButton
+              handleShowEdit={() => setShowEditForm(true)}
+            />
+            <CRUDButtons.DeleteButton handleRemove={handleRemove} />
+          </Box>
+        )}
       </Modal>
       {/*  */}
       <StyledTableRow key={transaction.id} onClick={() => setOpenModal(true)}>
