@@ -33,15 +33,30 @@ export class RecurringTransaction extends Transaction {
       );
   }
 
+  // receieve a date string and reformat it as a Date object
+  // with time data removed
+  private static formatDateWithoutTimes(date: Date) {
+    return new Date(new Date(date).toDateString());
+  }
+
+  // get current day without times
+  private static getCurrentDayWithoutTimes() {
+    return this.formatDateWithoutTimes(new Date());
+  }
+
+  // format start and optional end date for recurring transaction object
   private static formatDateObjects(
     recurringTransaction: IRecurringTransaction
   ) {
     const { startDate, endDate } = recurringTransaction;
-    recurringTransaction.startDate = new Date(startDate);
-    recurringTransaction.endDate = endDate ? new Date(endDate) : null;
+    recurringTransaction.startDate = this.formatDateWithoutTimes(startDate);
+    recurringTransaction.endDate = endDate
+      ? this.formatDateWithoutTimes(endDate)
+      : null;
     return recurringTransaction;
   }
 
+  // calculate the next day in a recurring cycle (daily, weekly, etc.)
   private static getNextDateInCycle(cycle: CYCLE, currentDate: Date): Date {
     switch (cycle) {
       case "DAILY":
@@ -57,7 +72,7 @@ export class RecurringTransaction extends Transaction {
     }
   }
 
-  // get all viable days the a recurring transaction occurs on up to the present
+  // get all viable days that a recurring transaction occurs on up to the present
   private static getDurationOfRecurringTransactionDays(
     recurringTransaction: IRecurringTransaction,
     nextDateToAdd: Date, // will use recurringTransaction.startDate to start with
@@ -99,7 +114,7 @@ export class RecurringTransaction extends Transaction {
     const transactionDates = this.getDurationOfRecurringTransactionDays(
       recurringTransaction,
       recurringTransaction.startDate,
-      new Date()
+      this.getCurrentDayWithoutTimes()
     );
 
     return {
@@ -119,14 +134,10 @@ export class RecurringTransaction extends Transaction {
   public static calculateRecurringTransactions(
     recurringTransactions: IRecurringTransaction[]
   ) {
-    const today = new Date();
+    const today = this.getCurrentDayWithoutTimes();
     return recurringTransactions.map((rt) =>
       this.calculateRecurringTransaction(rt, today)
     );
-  }
-
-  private static formatDateWithoutTimes(date: Date) {
-    return new Date(date.toDateString());
   }
 
   public static generateRecurringTransactions(
@@ -148,23 +159,16 @@ export class RecurringTransaction extends Transaction {
       return recurringTemplates
         .map((rt) =>
           rt.dates
-            .filter((date) => {
-              console.log("possible date: ", date);
-              console.log("boundaries: start", boundaries?.start);
-              console.log("boundaries: end", boundaries?.end);
-              console.log(
-                "accepted? ",
-                !boundaries ||
-                  (date >= boundaries.start && date <= boundaries.end)
-              );
-
-              const fmtDate = this.formatDateWithoutTimes(date);
-              return (
-                !boundaries ||
-                (fmtDate >= boundaries.start && fmtDate <= boundaries.end)
-              );
-            })
-            .map((date) => ({ ...rt, date: new Date(date) }))
+            // ! what if no transactions but only a recurring transaction?
+            // .filter((date) => {
+            //   const fmtDate = this.formatDateWithoutTimes(date);
+            //   return (
+            //     !boundaries ||
+            //     (fmtDate >= boundaries.start && fmtDate <= boundaries.end)
+            //   );
+            // })
+            // ! may not need the additional formatWithoutTimes
+            .map((date) => ({ ...rt, date: this.formatDateWithoutTimes(date) }))
         )
         .flat();
     };
