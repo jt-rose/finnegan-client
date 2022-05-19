@@ -45,8 +45,13 @@ const Index = () => {
   //     0
   //   );
 
+  const hasMoreTransactions = Transaction.hasMore(transactionFetch.data);
+
   const rt = calculatedRecurringTransactions
-    ? calculatedRecurringTransactions.mergeAndSortAllTransactions(transactions)
+    ? calculatedRecurringTransactions.mergeAndSortAllTransactions(
+        transactions,
+        hasMoreTransactions
+      )
     : [];
 
   // generate transactions based on dates of recurring transactions
@@ -88,7 +93,7 @@ const Index = () => {
 
   // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
   // ! combine them and visually organize by date
-
+  console.log("tail: ", hasMoreTransactions);
   const transactionSum =
     sumFetch.data && calculatedRecurringTransactions
       ? sumFetch.data + calculatedRecurringTransactions.grandTotal
@@ -99,9 +104,11 @@ const Index = () => {
       <Typography variant="h2">SUM: {transactionSum}</Typography>
 
       <TransactionTables transactions={rt} />
-      <button onClick={() => transactionFetch.fetchNextPage()}>
-        load more
-      </button>
+      {hasMoreTransactions && (
+        <button onClick={() => transactionFetch.fetchNextPage()}>
+          load more
+        </button>
+      )}
       <p onClick={() => User.setGoal(50000, new Date())}>Set Goal</p>
       {userFetch.data && (
         <>
