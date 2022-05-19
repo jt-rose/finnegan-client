@@ -3,7 +3,7 @@ import { CATEGORY } from "../enums/CATEGORY";
 import { CYCLE } from "../enums/CYCLE";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
-import { Transaction } from "./Transaction";
+import { ITransaction, Transaction } from "./Transaction";
 import { IUser } from "./User";
 import dayjs from "dayjs";
 
@@ -123,6 +123,107 @@ export class RecurringTransaction extends Transaction {
     return recurringTransactions.map((rt) =>
       this.calculateRecurringTransaction(rt, today)
     );
+  }
+
+  private static formatDateWithoutTimes(date: Date) {
+    return new Date(date.toDateString());
+  }
+
+  public static generateRecurringTransactions(
+    recurringTransactions: IRecurringTransaction[]
+  ) {
+    const today = new Date();
+    const r = recurringTransactions.map((rt) =>
+      this.calculateRecurringTransaction(rt, today)
+    );
+
+    const recurringTemplates = r.map((x) => ({
+      ...x.recurringTransaction,
+      dates: x.transactionDates,
+    }));
+    const createSequentialTransactions = (boundaries?: {
+      start: Date;
+      end: Date;
+    }) => {
+      return recurringTemplates
+        .map((rt) =>
+          rt.dates
+            .filter((date) => {
+              console.log("possible date: ", date);
+              console.log("boundaries: start", boundaries?.start);
+              console.log("boundaries: end", boundaries?.end);
+              console.log(
+                "accepted? ",
+                !boundaries ||
+                  (date >= boundaries.start && date <= boundaries.end)
+              );
+
+              const fmtDate = this.formatDateWithoutTimes(date);
+              return (
+                !boundaries ||
+                (fmtDate >= boundaries.start && fmtDate <= boundaries.end)
+              );
+            })
+            .map((date) => ({ ...rt, date: new Date(date) }))
+        )
+        .flat();
+    };
+
+    return {
+      recurringTemplates,
+      createSequentialTransactions,
+      grandTotal: r.reduce((sum, recurring) => sum + recurring.totalAmount, 0),
+      mergeAndSortAllTransactions: (
+        nonrecurringTransactions: ITransaction[]
+      ) => {
+        // convert date strings to date objects
+        nonrecurringTransactions.forEach(
+          (t) => (t.date = this.formatDateWithoutTimes(new Date(t.date)))
+        );
+
+        // get starting and ending date boundaries
+        let start: Date | undefined;
+        let end: Date | undefined;
+
+        for (const t of nonrecurringTransactions) {
+          if (!start || t.date < start) {
+            start = t.date;
+            console.log("start: ", start);
+          }
+
+          if (!end || t.date > end) {
+            end = t.date;
+            console.log("end: ", end);
+          }
+        }
+
+        const boundaries = start && end ? { start, end } : undefined;
+        const recurringTransactions = createSequentialTransactions(boundaries);
+
+        return [...nonrecurringTransactions, ...recurringTransactions] // ! compare just dates, remove times
+          .sort((x, y) => {
+            //const comparison = x.date.get() - y.date.getTime();
+            const compareYear =
+              y.date.getUTCFullYear() - x.date.getUTCFullYear();
+            const compareMonth = y.date.getUTCMonth() - x.date.getUTCMonth();
+            const compareDate = y.date.getUTCDate() - x.date.getUTCDate();
+
+            const comparison = compareYear + compareMonth + compareDate;
+            if (comparison === 0) {
+              if ("cycle" in x && "cycle" in y) {
+                return y.amount - x.amount;
+              }
+
+              if (!("cycle" in x) && !("cycle" in y)) {
+                return y.amount - x.amount;
+              }
+
+              return "cycle" in y ? 1 : -1;
+            }
+            return comparison;
+          });
+      },
+    };
   }
 
   public static edit(recurringTransaction: IRecurringTransaction) {

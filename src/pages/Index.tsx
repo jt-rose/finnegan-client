@@ -33,70 +33,72 @@ const Index = () => {
 
   // generate dates for each scheduled recurring transaction
   const calculatedRecurringTransactions = recurringFetch.data
-    ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
+    ? RecurringTransaction.generateRecurringTransactions(recurringFetch.data)
+    : null;
+  //   recurringFetch.data
+  //     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
+  //     : [];
+
+  //   // calculate sum of recurring transactions
+  //   const recurringTransactionsSum = calculatedRecurringTransactions.reduce(
+  //     (sum, recurring) => sum + recurring.totalAmount,
+  //     0
+  //   );
+
+  const rt = calculatedRecurringTransactions
+    ? calculatedRecurringTransactions.mergeAndSortAllTransactions(transactions)
     : [];
 
-  // calculate sum of recurring transactions
-  const recurringTransactionsSum = calculatedRecurringTransactions.reduce(
-    (sum, recurring) => sum + recurring.totalAmount,
-    0
-  );
-
   // generate transactions based on dates of recurring transactions
-  // ! limit by currently shown dates to optoimize
-  // ! store data identifying these as recurring
-  const rt = calculatedRecurringTransactions
-    .map((x) => x.getSequenceOfTransactions())
-    //   x.transactionDates.flatMap((tr) =>
-    //     ({ ...x.recurringTransaction, date: tr })
-    //   )
-    // )
-    .flat();
-  console.log("rt: ", rt);
+  // ! limit by currently shown dates to optimize
+  //   const rt = calculatedRecurringTransactions
+  //     .map((x) => x.getSequenceOfTransactions())
+  //     .flat();
+  //   console.log("rt: ", rt);
 
-  // ! this is very hacky - create a proper interface later
-  // ! place recurring at top of each date
-  const combinedTransactions = [
-    ...transactions,
-    ...rt.map((r) => ({ ...r, id: -1, owner: userFetch.data! })),
-  ] // ! compare just dates, remove times
-    .map((x) => ({ ...x, date: new Date(x.date) }))
-    .sort((x, y) => {
-      //const comparison = x.date.get() - y.date.getTime();
-      const compareYear = y.date.getUTCFullYear() - x.date.getUTCFullYear();
-      const compareMonth = y.date.getUTCMonth() - x.date.getUTCMonth();
-      const compareDate = y.date.getUTCDate() - x.date.getUTCDate();
+  //   // ! this is very hacky - create a proper interface later
+  //   // ! place recurring at top of each date
+  //   const combinedTransactions = [
+  //     ...transactions,
+  //     ...rt.map((r) => ({ ...r, id: -1, owner: userFetch.data! })),
+  //   ] // ! compare just dates, remove times
+  //     .map((x) => ({ ...x, date: new Date(x.date) }))
+  //     .sort((x, y) => {
+  //       //const comparison = x.date.get() - y.date.getTime();
+  //       const compareYear = y.date.getUTCFullYear() - x.date.getUTCFullYear();
+  //       const compareMonth = y.date.getUTCMonth() - x.date.getUTCMonth();
+  //       const compareDate = y.date.getUTCDate() - x.date.getUTCDate();
 
-      const comparison = compareYear + compareMonth + compareDate;
-      console.log("comaparison: ", comparison);
-      console.log("cycle in y? ", "cycle" in x);
-      if (comparison === 0) {
-        if ("cycle" in x && "cycle" in y) {
-          return y.amount - x.amount;
-        }
+  //       const comparison = compareYear + compareMonth + compareDate;
+  //       console.log("comaparison: ", comparison);
+  //       console.log("cycle in y? ", "cycle" in x);
+  //       if (comparison === 0) {
+  //         if ("cycle" in x && "cycle" in y) {
+  //           return y.amount - x.amount;
+  //         }
 
-        if (!("cycle" in x) && !("cycle" in y)) {
-          return y.amount - x.amount;
-        }
+  //         if (!("cycle" in x) && !("cycle" in y)) {
+  //           return y.amount - x.amount;
+  //         }
 
-        return "cycle" in y ? 1 : -1;
-      }
-      return comparison;
-    });
+  //         return "cycle" in y ? 1 : -1;
+  //       }
+  //       return comparison;
+  //     });
 
   // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
   // ! combine them and visually organize by date
 
   const transactionSum =
-    sumFetch.data && recurringFetch.data
-      ? sumFetch.data + recurringTransactionsSum
+    sumFetch.data && calculatedRecurringTransactions
+      ? sumFetch.data + calculatedRecurringTransactions.grandTotal
       : "...loading";
 
   return (
     <>
       <Typography variant="h2">SUM: {transactionSum}</Typography>
 
-      <TransactionTables transactions={combinedTransactions} />
+      <TransactionTables transactions={rt} />
       <button onClick={() => transactionFetch.fetchNextPage()}>
         load more
       </button>
