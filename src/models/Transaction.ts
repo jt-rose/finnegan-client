@@ -1,4 +1,9 @@
-import { QueryClient, useInfiniteQuery, useQuery } from "react-query";
+import {
+  InfiniteData,
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+} from "react-query";
 import { CATEGORY } from "../enums/CATEGORY";
 import { BASE_ROUTE } from "../queries/baseRoute";
 import { get, post, put, remove } from "../queries/fetchers";
@@ -46,7 +51,11 @@ export class Transaction {
   public static get usePaginatedFetch() {
     return () =>
       useInfiniteQuery<
-        { content: ITransaction[]; pageable: { pageNumber: number } },
+        {
+          content: ITransaction[];
+          pageable: { pageNumber: number };
+          last: boolean;
+        },
         Error
       >(
         "paginatedTransactions",
@@ -55,11 +64,28 @@ export class Transaction {
         {
           //keepPreviousData: true,
           getNextPageParam: (lastPage) => {
-            console.log("lastPage: ", lastPage);
             return lastPage.pageable.pageNumber + 1;
           },
         }
       );
+  }
+
+  public static hasMore(
+    transactionFetchData: //ReturnType<typeof Transaction.usePaginatedFetch>
+    | InfiniteData<{
+          content: ITransaction[];
+          pageable: {
+            pageNumber: number;
+          };
+          last: boolean;
+        }>
+      | undefined
+  ) {
+    if (transactionFetchData) {
+      return !transactionFetchData.pages[transactionFetchData.pages.length - 1]
+        .last;
+    }
+    return true;
   }
 
   public static get useTransactionSumFetch() {
