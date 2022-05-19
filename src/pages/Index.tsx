@@ -46,17 +46,11 @@ const Index = () => {
   // ! limit by currently shown dates to optoimize
   // ! store data identifying these as recurring
   const rt = calculatedRecurringTransactions
-    .map((x) =>
-      x.transactionDates.flatMap((tr) =>
-        //   new Transaction(
-        //     x.recurringTransaction.amount,
-        //     x.recurringTransaction.category,
-        //     tr,
-        //     x.recurringTransaction.note
-        //   )
-        ({ ...x.recurringTransaction, date: tr })
-      )
-    )
+    .map((x) => x.getSequenceOfTransactions())
+    //   x.transactionDates.flatMap((tr) =>
+    //     ({ ...x.recurringTransaction, date: tr })
+    //   )
+    // )
     .flat();
   console.log("rt: ", rt);
 

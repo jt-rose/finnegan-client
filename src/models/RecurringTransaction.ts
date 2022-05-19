@@ -106,6 +106,13 @@ export class RecurringTransaction extends Transaction {
       recurringTransaction,
       transactionDates,
       totalAmount: recurringTransaction.amount * transactionDates.length,
+      getSequenceOfTransactions: () => {
+        return transactionDates.map((date) => ({
+          ...recurringTransaction,
+          id: -1,
+          date,
+        }));
+      },
     };
   }
 
