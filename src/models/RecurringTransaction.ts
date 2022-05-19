@@ -160,13 +160,13 @@ export class RecurringTransaction extends Transaction {
         .map((rt) =>
           rt.dates
             // ! what if no transactions but only a recurring transaction?
-            // .filter((date) => {
-            //   const fmtDate = this.formatDateWithoutTimes(date);
-            //   return (
-            //     !boundaries ||
-            //     (fmtDate >= boundaries.start && fmtDate <= boundaries.end)
-            //   );
-            // })
+            .filter((date) => {
+              const fmtDate = this.formatDateWithoutTimes(date);
+              return (
+                !boundaries ||
+                (fmtDate >= boundaries.start && fmtDate <= boundaries.end)
+              );
+            })
             // ! may not need the additional formatWithoutTimes
             .map((date) => ({ ...rt, date: this.formatDateWithoutTimes(date) }))
         )
@@ -178,7 +178,8 @@ export class RecurringTransaction extends Transaction {
       createSequentialTransactions,
       grandTotal: r.reduce((sum, recurring) => sum + recurring.totalAmount, 0),
       mergeAndSortAllTransactions: (
-        nonrecurringTransactions: ITransaction[]
+        nonrecurringTransactions: ITransaction[],
+        hasMore: boolean
       ) => {
         // convert date strings to date objects
         nonrecurringTransactions.forEach(
@@ -187,21 +188,18 @@ export class RecurringTransaction extends Transaction {
 
         // get starting and ending date boundaries
         let start: Date | undefined;
-        let end: Date | undefined;
+        let end = this.getCurrentDayWithoutTimes();
 
-        for (const t of nonrecurringTransactions) {
-          if (!start || t.date < start) {
-            start = t.date;
-            console.log("start: ", start);
-          }
-
-          if (!end || t.date > end) {
-            end = t.date;
-            console.log("end: ", end);
+        if (hasMore) {
+          for (const t of nonrecurringTransactions) {
+            if (!start || t.date < start) {
+              start = t.date;
+              console.log("start: ", start);
+            }
           }
         }
 
-        const boundaries = start && end ? { start, end } : undefined;
+        const boundaries = start ? { start, end } : undefined;
         const recurringTransactions = createSequentialTransactions(boundaries);
 
         return [...nonrecurringTransactions, ...recurringTransactions] // ! compare just dates, remove times
