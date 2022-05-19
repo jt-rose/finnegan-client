@@ -7,7 +7,6 @@ import { useNavigate } from "react-router";
 import { CRUDButtons } from "../components/CrudButtons";
 import TransactionForm from "../components/TransactionForm";
 import { useState } from "react";
-import dayjs from "dayjs";
 
 const Index = () => {
   const [displayCreateModal, setDisplayCreateModal] = useState(false);
@@ -35,15 +34,6 @@ const Index = () => {
   const calculatedRecurringTransactions = recurringFetch.data
     ? RecurringTransaction.generateRecurringTransactions(recurringFetch.data)
     : null;
-  //   recurringFetch.data
-  //     ? RecurringTransaction.calculateRecurringTransactions(recurringFetch.data)
-  //     : [];
-
-  //   // calculate sum of recurring transactions
-  //   const recurringTransactionsSum = calculatedRecurringTransactions.reduce(
-  //     (sum, recurring) => sum + recurring.totalAmount,
-  //     0
-  //   );
 
   const hasMoreTransactions = Transaction.hasMore(transactionFetch.data);
 
@@ -54,45 +44,6 @@ const Index = () => {
       )
     : [];
 
-  // generate transactions based on dates of recurring transactions
-  // ! limit by currently shown dates to optimize
-  //   const rt = calculatedRecurringTransactions
-  //     .map((x) => x.getSequenceOfTransactions())
-  //     .flat();
-  //   console.log("rt: ", rt);
-
-  //   // ! this is very hacky - create a proper interface later
-  //   // ! place recurring at top of each date
-  //   const combinedTransactions = [
-  //     ...transactions,
-  //     ...rt.map((r) => ({ ...r, id: -1, owner: userFetch.data! })),
-  //   ] // ! compare just dates, remove times
-  //     .map((x) => ({ ...x, date: new Date(x.date) }))
-  //     .sort((x, y) => {
-  //       //const comparison = x.date.get() - y.date.getTime();
-  //       const compareYear = y.date.getUTCFullYear() - x.date.getUTCFullYear();
-  //       const compareMonth = y.date.getUTCMonth() - x.date.getUTCMonth();
-  //       const compareDate = y.date.getUTCDate() - x.date.getUTCDate();
-
-  //       const comparison = compareYear + compareMonth + compareDate;
-  //       console.log("comaparison: ", comparison);
-  //       console.log("cycle in y? ", "cycle" in x);
-  //       if (comparison === 0) {
-  //         if ("cycle" in x && "cycle" in y) {
-  //           return y.amount - x.amount;
-  //         }
-
-  //         if (!("cycle" in x) && !("cycle" in y)) {
-  //           return y.amount - x.amount;
-  //         }
-
-  //         return "cycle" in y ? 1 : -1;
-  //       }
-  //       return comparison;
-  //     });
-
-  // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
-  // ! combine them and visually organize by date
   console.log("tail: ", hasMoreTransactions);
   const transactionSum =
     sumFetch.data && calculatedRecurringTransactions
