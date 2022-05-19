@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { CRUDButtons } from "../components/CrudButtons";
 import TransactionForm from "../components/TransactionForm";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 const Index = () => {
   const [displayCreateModal, setDisplayCreateModal] = useState(false);
@@ -46,14 +47,14 @@ const Index = () => {
   // ! store data identifying these as recurring
   const rt = calculatedRecurringTransactions
     .map((x) =>
-      x.transactionDates.flatMap(
-        (tr) =>
-          new Transaction(
-            x.recurringTransaction.amount,
-            x.recurringTransaction.category,
-            tr,
-            x.recurringTransaction.note
-          )
+      x.transactionDates.flatMap((tr) =>
+        //   new Transaction(
+        //     x.recurringTransaction.amount,
+        //     x.recurringTransaction.category,
+        //     tr,
+        //     x.recurringTransaction.note
+        //   )
+        ({ ...x.recurringTransaction, date: tr })
       )
     )
     .flat();
@@ -64,9 +65,30 @@ const Index = () => {
   const combinedTransactions = [
     ...transactions,
     ...rt.map((r) => ({ ...r, id: -1, owner: userFetch.data! })),
-  ]
+  ] // ! compare just dates, remove times
     .map((x) => ({ ...x, date: new Date(x.date) }))
-    .sort((x, y) => x.date.getTime() - y.date.getTime());
+    .sort((x, y) => {
+      //const comparison = x.date.get() - y.date.getTime();
+      const compareYear = y.date.getUTCFullYear() - x.date.getUTCFullYear();
+      const compareMonth = y.date.getUTCMonth() - x.date.getUTCMonth();
+      const compareDate = y.date.getUTCDate() - x.date.getUTCDate();
+
+      const comparison = compareYear + compareMonth + compareDate;
+      console.log("comaparison: ", comparison);
+      console.log("cycle in y? ", "cycle" in x);
+      if (comparison === 0) {
+        if ("cycle" in x && "cycle" in y) {
+          return y.amount - x.amount;
+        }
+
+        if (!("cycle" in x) && !("cycle" in y)) {
+          return y.amount - x.amount;
+        }
+
+        return "cycle" in y ? 1 : -1;
+      }
+      return comparison;
+    });
 
   // ! filter out recurr-transactions if they are outside of the normal range of the regular transactions
   // ! combine them and visually organize by date
