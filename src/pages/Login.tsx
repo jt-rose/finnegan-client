@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { User } from "../models/User";
 import { useState } from "react";
-import { Box, Button, TextField, Container } from "@mui/material";
+import { Box, Button, TextField, Container, Typography } from "@mui/material";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -45,6 +45,11 @@ function Login() {
       <Button variant="outlined" onClick={handleLogin}>
         Sign In
       </Button>
+      <Typography>
+        <Button onClick={() => navigate("/register")}>
+          Not a member? Sign up here
+        </Button>
+      </Typography>
     </Container>
   );
 }
