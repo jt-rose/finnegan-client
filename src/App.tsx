@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import Stats from "./pages/Stats";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/user" element={<Profile />} />
               <Route path="/user/edit" element={<EditProfile />} />
               <Route path="/search" element={<Search />} />
