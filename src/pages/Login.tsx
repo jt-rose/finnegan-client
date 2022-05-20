@@ -34,6 +34,7 @@ function Login() {
         onChange={(e) => setUsername(e.target.value)}
       />
       <TextField
+        type="password"
         id="password-input"
         label="password"
         variant="outlined"
